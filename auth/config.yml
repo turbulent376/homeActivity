@@ -1,0 +1,83 @@
+# grpc configuration
+grpc:
+  # host (mostly used for grpc tests to connect from client)
+  host: ${AUTH_GRPC_HOST|localhost}
+  # grpc port
+  port: ${AUTH_GRPC_PORT|50060}
+  # enabling tracing all the requests/responses
+  trace: ${AUTH_GRPC_TRACE|false}
+
+# NATS client
+nats:
+  # host
+  host: ${NATS_HOST|localhost}
+  # port
+  port: 4222
+  # cluster Id
+  clusterId: ${NATS_CLUSTER_ID|test-cluster}
+
+# storages configuration
+storages:
+  # redis client
+  redis:
+    # port
+    port: 6379
+    # host
+    host: ${REDIS_HOST|localhost}
+    # password
+    password: ${REDIS_PASSWORD|}
+    # default ttl
+    ttl: 7200
+  # database client
+  database:
+    # local path to migration folder
+    mig-path: ${FOCROOT|}/auth/db/migrations
+    # db master config
+    master:
+      # database name
+      dbname: ${AUTH_DB_MASTER_NAME|focusednow}
+      # db username
+      user: auth
+      # db password
+      password: ${AUTH_DB_MASTER_PASSWORD|auth}
+      # db port
+      port: 5432
+      # host for master (read-write) database
+      host: ${AUTH_DB_MASTER_HOST|localhost}
+    # db slave config
+    slave:
+      # database name
+      dbname: ${AUTHDB_SLAVE_NAME|focusednow}
+      # db username
+      user: auth
+      # db password
+      password: ${AUTH_DB_SLAVE_PASSWORD|auth}
+      # db port
+      port: 5432
+      # host for master (read-write) database
+      host: ${AUTH_DB_SLAVE_HOST|localhost}
+
+# logging configuration
+log:
+  # level
+  level: ${AUTH_LOG_LEVEL|trace}
+  # output format (plain, json)
+  format: ${AUTH_LOG_FORMAT|plain}
+
+# cluster configuration
+cluster:
+  # cluster size (used by RAFT leader election algo)
+  size: ${AUTH_CLUSTER_SIZE|1}
+  # path to log
+  log: "/tmp/raft.log"
+
+# auth configuration
+auth:
+ keyRS256: ${AUTH_KEY_RS256}
+
+# adapters configuration
+adapters:
+  notification:
+    grpc:
+      host: ${NOTIFICATION_GRPC_HOST|localhost}
+      port: ${NOTIFICATION_GRPC_PORT|50063}

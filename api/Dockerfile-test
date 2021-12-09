@@ -1,0 +1,29 @@
+FROM golang:1.16.8-stretch
+
+ENV GO111MODULE=on
+
+WORKDIR /src
+
+COPY ./go.mod ./go.sum ./api/
+
+WORKDIR /src/api
+
+ARG BITBUCKET_USER
+ARG BITBUCKET_TOKEN
+
+RUN go env -w GOPRIVATE="bitbucket.org/orbi360/*" && \
+    echo -e "machine bitbucket.org\nlogin ${BITBUCKET_USER}\npassword ${BITBUCKET_TOKEN}" > ~/.netrc && \
+    apt-get update && apt-get install make && \
+    go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.41.0
+
+RUN go mod download
+
+COPY . ./
+
+WORKDIR /src/api
+
+ENV CGO_ENABLED=0
+ENV GOOS=linux
+ENV FOCROOT="/src"
+
+RUN make build

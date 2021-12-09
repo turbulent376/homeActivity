@@ -1,0 +1,29 @@
+FROM golang:1.16.8-stretch
+
+ENV GO111MODULE=on
+
+WORKDIR /src
+
+COPY ./go.mod ./go.sum ./timesheet/
+
+WORKDIR /src/timesheet
+
+ARG SPACE_USER
+ARG SPACE_TOKEN
+
+RUN go env -w GOPRIVATE="git.jetbrains.space/orbi/fcsd/*" && \
+    echo -e "machine git.jetbrains.space\nlogin ${SPACE_USER}\npassword ${SPACE_TOKEN}" > ~/.netrc && \
+    apt-get update && apt-get install make && \
+    go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.41.0
+
+RUN go mod download
+
+COPY . ./
+
+WORKDIR /src/timesheet
+
+ENV CGO_ENABLED=0
+ENV GOOS=linux
+ENV FOCROOT="/src"
+
+RUN make build

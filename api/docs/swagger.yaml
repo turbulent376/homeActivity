@@ -1,0 +1,387 @@
+basePath: /api
+definitions:
+  billing.CreateProduct:
+    properties:
+      licenseId:
+        description: LicenseId identification number of license
+        type: string
+      name:
+        description: Name of product
+        type: string
+    required:
+    - licenseId
+    - name
+    type: object
+  billing.MakePayment:
+    properties:
+      orderId:
+        description: OrderId id of order in App Store or Google play
+        type: string
+      productId:
+        description: ProductId identification of product
+        type: string
+      transaction:
+        description: Transaction token of payment received from shop
+        type: string
+      userId:
+        description: UserId unique user identification
+        type: string
+    required:
+    - orderId
+    - productId
+    - transaction
+    - userId
+    type: object
+  billing.Payment:
+    properties:
+      Id:
+        type: string
+      OrderId:
+        type: string
+      ProductId:
+        type: string
+      Status:
+        type: string
+      UserId:
+        type: string
+    type: object
+  billing.Product:
+    properties:
+      Id:
+        type: string
+      LicenseId:
+        type: string
+      Name:
+        type: string
+    type: object
+  billing.UpdateProduct:
+    properties:
+      licenseId:
+        description: LicenseId identification number of license
+        type: string
+      name:
+        description: Name of product
+        type: string
+    type: object
+  http.Error:
+    properties:
+      code:
+        description: Code is error code provided by error producer
+        type: string
+      details:
+        additionalProperties: true
+        description: Details is additional info provided by error producer
+        type: object
+      message:
+        description: Message is error description
+        type: string
+    type: object
+  license.CreateLicenseRequest:
+    properties:
+      Duration:
+        type: string
+      Locale:
+        type: string
+      Name:
+        type: string
+    type: object
+  license.License:
+    properties:
+      Duration:
+        type: string
+      Id:
+        type: string
+      Locale:
+        type: string
+      Name:
+        type: string
+    type: object
+  license.UserLicense:
+    properties:
+      ExpiredAt:
+        $ref: '#/definitions/timestamppb.Timestamp'
+      Id:
+        type: string
+      Name:
+        type: string
+    type: object
+  license.UserLicenses:
+    properties:
+      Licenses:
+        items:
+          $ref: '#/definitions/license.UserLicense'
+        type: array
+      UserId:
+        type: string
+    type: object
+  timestamppb.Timestamp:
+    properties:
+      nanos:
+        description: |-
+          Non-negative fractions of a second at nanosecond resolution. Negative
+          second values with fractions must still have non-negative nanos values
+          that count forward in time. Must be from 0 to 999,999,999
+          inclusive.
+        type: integer
+      seconds:
+        description: |-
+          Represents seconds of UTC time since Unix epoch
+          1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+          9999-12-31T23:59:59Z inclusive.
+        type: integer
+    type: object
+info:
+  contact:
+    email: nikita.zaitsev@teamlabs.cc
+    name: Nikita Zaitsev
+  title: Focusednow swagger
+  version: 0.0.1
+paths:
+  /billing/apple:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          items:
+            type: integer
+          type: array
+      responses:
+        "200":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: webhook for apple payments receive
+      tags:
+      - billing
+  /billing/payment:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/billing.MakePayment'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/billing.Payment'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: request for registering payment
+      tags:
+      - billing
+  /billing/product:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/billing.CreateProduct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/billing.Product'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: creating product request
+      tags:
+      - billing
+  /billing/product/{productId}:
+    delete:
+      parameters:
+      - description: uuid of product
+        in: path
+        name: productId
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: delete product by id
+      tags:
+      - billing
+    get:
+      parameters:
+      - description: uuid of product
+        in: path
+        name: productId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/billing.Product'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: getting product information by id
+      tags:
+      - billing
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: uuid of product
+        in: path
+        name: productId
+        required: true
+        type: string
+      - description: update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/billing.UpdateProduct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/billing.Product'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: update product information by id
+      tags:
+      - billing
+  /billing/products:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/billing.Product'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: request for getting list of products
+      tags:
+      - billing
+  /licence/licences:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/license.License'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: getting all licenses
+      tags:
+      - license
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/license.CreateLicenseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/license.License'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: create license information
+      tags:
+      - license
+  /licence/licences/{id}:
+    get:
+      parameters:
+      - description: license id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/license.License'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: get license information
+      tags:
+      - license
+  /licence/user/{userId}:
+    get:
+      parameters:
+      - description: user identification number
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/license.UserLicenses'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/http.Error'
+      summary: getting user licenses
+      tags:
+      - license
+swagger: "2.0"

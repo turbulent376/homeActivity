@@ -1,0 +1,72 @@
+# grpc configuration
+grpc:
+  # host (mostly used for grpc tests to connect from client)
+  host: ${TIMESHEET_GRPC_HOST|localhost}
+  # grpc port
+  port: ${TIMESHEET_GRPC_PORT|50062}
+  # enabling tracing all the requests/responses
+  trace: ${TIMESHEET_GRPC_TRACE|false}
+
+# NATS client
+nats:
+  # host
+  host: ${NATS_HOST|localhost}
+  # port
+  port: 4222
+  # cluster Id
+  clusterId: ${NATS_CLUSTER_ID|test-cluster}
+
+# storages configuration
+storages:
+  # redis client
+  redis:
+    # port
+    port: 6379
+    # host
+    host: ${REDIS_HOST|localhost}
+    # password
+    password: ${REDIS_PASSWORD|}
+    # default ttl
+    ttl: 7200
+  # database client
+  database:
+    # local path to migration folder
+    mig-path: ${FOCROOT|}/activity/db/migrations
+    # db master config
+    master:
+      # database name
+      dbname: ${TIMESHEET_DB_MASTER_NAME|homeactivity}
+      # db username
+      user: activity
+      # db password
+      password: ${TIMESHEET_DB_MASTER_PASSWORD|activity}
+      # db port
+      port: 5432
+      # host for master (read-write) database
+      host: ${TIMESHEET_DB_MASTER_HOST|localhost}
+    # db slave config
+    slave:
+      # database name
+      dbname: ${TIMESHEETDB_SLAVE_NAME|homeactivity}
+      # db username
+      user: timesheet
+      # db password
+      password: ${TIMESHEET_DB_SLAVE_PASSWORD|activity}
+      # db port
+      port: 5432
+      # host for master (read-write) database
+      host: ${TIMESHEET_DB_SLAVE_HOST|localhost}
+
+# logging configuration
+log:
+  # level
+  level: ${TIMESHEET_LOG_LEVEL|trace}
+  # output format (plain, json)
+  format: ${TIMESHEET_LOG_FORMAT|plain}
+
+# cluster configuration
+cluster:
+  # cluster size (used by RAFT leader election algo)
+  size: ${TIMESHEET_CLUSTER_SIZE|1}
+  # path to log
+  log: "/tmp/raft.log"
