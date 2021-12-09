@@ -1,4 +1,4 @@
-module git.jetbrains.space/orbi/fcsd/proto
+module github.com/turbulent376/homeactivity/proto
 
 go 1.16
 

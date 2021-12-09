@@ -1,4 +1,4 @@
-module git.jetbrains.space/orbi/fcsd/kit
+module github.com/turbulent376/homeactivity/kit
 
 go 1.16
 

@@ -3,7 +3,7 @@ package main
 
 import (
 	"context"
-	kitContext "git.jetbrains.space/orbi/fcsd/kit/context"
+	kitContext "github.com/turbulent376/homeactivity/kit/context"
 	"git.jetbrains.space/orbi/fcsd/timesheet"
 	"git.jetbrains.space/orbi/fcsd/timesheet/internal/logger"
 	"google.golang.org/api/tasks/v1"
