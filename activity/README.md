@@ -1,7 +1,7 @@
-# Timesheet service
+# Activity service
 
 ## Description
-**timesheet** service is responsible for timetable information
+**activity** service is responsible for home activity keeping information
 
 ## Installation
 
@@ -55,6 +55,6 @@ make db-down
 
 ## Owner
 
-**Name:** Sergey Filatov
+**Name:** Alexander Moreno
 
-**Email:** filatov.s.d@gmail.com
+**Email:** s.a.moreno.a.s@gmail.com
