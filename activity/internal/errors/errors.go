@@ -3,8 +3,8 @@ package errors
 
 import (
 	"context"
-	"git.jetbrains.space/orbi/fcsd/kit/er"
-	pb "git.jetbrains.space/orbi/fcsd/proto/timesheet"
+	"github.com/turbulent376/kit/er"
+	pb "github.com/turbulent376/proto/activity"
 )
 
 var (
@@ -32,23 +32,8 @@ var (
 	ErrActivityDescriptionIsEmpty = func(ctx context.Context) error {
 		return er.WithBuilder(pb.ErrCodeActivityDescriptionIsEmpty, "empty activity name").C(ctx).Err()
 	}
-	ErrTimesheetSubjectIsEmpty = func(ctx context.Context) error {
-		return er.WithBuilder(pb.ErrCodeTimesheetSubjectEmpty, "subject can not be empty").C(ctx).Err()
-	}
 	ErrActivityTimeIsEmpty = func(ctx context.Context) error {
 		return er.WithBuilder(pb.ErrCodeActivityTimeEmpty, "time can not be empty").C(ctx).Err()
-	}
-	ErrTimesheetWeekDayIsEmpty = func(ctx context.Context) error {
-		return er.WithBuilder(pb.ErrCodeTimesheetWeekDayEmpty, "Date can not be empty").C(ctx).Err()
-	}
-	ErrTimesheetIsEmpty = func(ctx context.Context) error {
-		return er.WithBuilder(pb.ErrCodeTimesheetNotFound, "timesheet is empty").C(ctx).Err()
-	}
-	ErrTimesheetNotFound = func(ctx context.Context, id string) error {
-		return er.WithBuilder(pb.ErrCodeTimesheetNotFound, "not found").F(er.FF{"id": id}).C(ctx).Err()
-	}
-	ErrTimesheetDeleted = func(ctx context.Context, id string) error {
-		return er.WithBuilder(pb.ErrCodeTimesheetDeleted, "already deleted").F(er.FF{"id": id}).C(ctx).Err()
 	}
 	ErrActivityStorageCreate = func(cause error, ctx context.Context) error {
 		return er.WrapWithBuilder(cause, pb.ErrCodeActivityStorageCreate, "").C(ctx).Err()
@@ -68,13 +53,7 @@ var (
 	ErrActivityDeleteFail = func(cause error, ctx context.Context, id string) error {
 		return er.WrapWithBuilder(cause, pb.ErrCodeActivityDeleteFail, "").F(er.FF{"id": id}).C(ctx).Err()
 	}
-	ErrTimesheetStorageGetIds = func(cause error, ctx context.Context) error {
-		return er.WrapWithBuilder(cause, pb.ErrCodeTimesheetStorageGetIds, "").C(ctx).Err()
-	}
 	ErrActivityByOwnerSearch = func(cause error, ctx context.Context) error {
 		return er.WrapWithBuilder(cause, pb.ErrCodeActivityByOwnerSearch, "").C(ctx).Err()
-	}
-	ErrTimesheetAccessingToDb = func(cause error, ctx context.Context) error {
-		return er.WrapWithBuilder(cause, pb.ErrCodeTimesheetIdEmpty, "").C(ctx).Err()
 	}
 )

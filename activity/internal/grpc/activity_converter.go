@@ -1,12 +1,12 @@
 package grpc
 
 import (
-	pb "git.jetbrains.space/orbi/fcsd/proto/timesheet"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/domain"
+	pb "github.com/turbulent376/proto/activity"
+	"github.com/turbulent376/homeactivity/activity/internal/domain"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func (s *Server) toTimesheetPb(rq *domain.Timesheet) *pb.Timesheet {
+func (s *Server) toActivityPb(rq *domain.Activity) *pb.Timesheet {
 	return &pb.Timesheet{
 		Id:       rq.Id,
 		Owner:    rq.Owner,
@@ -15,16 +15,16 @@ func (s *Server) toTimesheetPb(rq *domain.Timesheet) *pb.Timesheet {
 	}
 }
 
-func (s *Server) toCreateTimesheetDomain(rq *pb.CreateTimesheetRequest) *domain.Timesheet {
-	return &domain.Timesheet{
+func (s *Server) toCreateActivityDomain(rq *pb.CreateTimesheetRequest) *domain.Activity {
+	return &domain.Activity{
 		Owner:    rq.Owner,
 		DateFrom: rq.DateFrom.AsTime(),
 		DateTo:   rq.DateTo.AsTime(),
 	}
 }
 
-func (s *Server) toUpdateTimesheetDomain(rq *pb.UpdateTimesheetRequest) *domain.Timesheet {
-	return &domain.Timesheet{
+func (s *Server) toUpdateTimesheetDomain(rq *pb.UpdateTimesheetRequest) *domain.Activity {
+	return &domain.Activity{
 		Id:       rq.Id,
 		Owner:    rq.Owner,
 		DateFrom: rq.DateFrom.AsTime(),
@@ -32,45 +32,21 @@ func (s *Server) toUpdateTimesheetDomain(rq *pb.UpdateTimesheetRequest) *domain.
 	}
 }
 
-func (s *Server) toSearchTimesheetDomain(rq *pb.SearchTimesheetRequest) *domain.SearchTimesheetRequest {
-	dateFromSearch := rq.DateFromSearch.AsTime()
-	dateToSearch := rq.DateToSearch.AsTime()
 
-	return &domain.SearchTimesheetRequest{
-		Owner:          rq.Owner,
-		DateFromSearch: dateFromSearch,
-		DateToSearch:   dateToSearch,
+func (s *Server) toCreateActivityTypeDomain(rq *pb.CreateEventRequest) *domain.ActivityType {
+	return &domain.ActivityType{
+
 	}
 }
 
-func (s *Server) toCreateEventDomain(rq *pb.CreateEventRequest) *domain.Event {
-	return &domain.Event{
-		TimesheetId: rq.TimesheetId,
-		Subject:     rq.Subject,
-		WeekDay:     rq.WeekDay,
-		TimeStart:   rq.TimeStart.AsTime(),
-		TimeEnd:     rq.TimeEnd.AsTime(),
-	}
-}
-
-func (s *Server) toUpdateEventDomain(rq *pb.UpdateEventRequest) *domain.Event {
-	return &domain.Event{
+func (s *Server) toUpdateActivityTypeDomain(rq *pb.UpdateEventRequest) *domain.ActivityType {
+	return &domain.ActivityType{
 		Id:          rq.Id,
-		TimesheetId: rq.TimesheetId,
-		Subject:     rq.Subject,
-		WeekDay:     rq.WeekDay,
-		TimeStart:   rq.TimeStart.AsTime(),
-		TimeEnd:     rq.TimeEnd.AsTime(),
 	}
 }
 
-func (s *Server) toEventPb(rq *domain.Event) *pb.Event {
-	return &pb.Event{
+func (s *Server) toActivityTypePb(rq *domain.ActivityType) *pb.ActycityType {
+	return &pb.ActycityType{
 		Id:          rq.Id,
-		TimesheetId: rq.TimesheetId,
-		Subject:     rq.Subject,
-		WeekDay:     rq.WeekDay,
-		TimeStart:   timestamppb.New(rq.TimeStart),
-		TimeEnd:     timestamppb.New(rq.TimeEnd),
 	}
 }

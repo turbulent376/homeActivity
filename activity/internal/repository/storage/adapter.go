@@ -3,12 +3,12 @@ package storage
 
 import (
 	"context"
-	kitCache "git.jetbrains.space/orbi/fcsd/kit/cache/redis"
-	kitStorage "git.jetbrains.space/orbi/fcsd/kit/db"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/config"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/domain"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/logger"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/meta"
+	kitCache "github.com/turbulent376/kit/cache/redis"
+	kitStorage "github.com/turbulent376/kit/db"
+	"github.com/turbulent376/homeactivity/activity/internal/config"
+	"github.com/turbulent376/homeactivity/activity/internal/domain"
+	"github.com/turbulent376/homeactivity/activity/internal/logger"
+	"github.com/turbulent376/homeactivity/activity/internal/meta"
 	"golang.org/x/sync/errgroup"
 )
 

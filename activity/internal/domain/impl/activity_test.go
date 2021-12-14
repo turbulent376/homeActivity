@@ -2,12 +2,12 @@ package impl
 
 import (
 	"context"
-	kitContext "git.jetbrains.space/orbi/fcsd/kit/context"
-	kitTest "git.jetbrains.space/orbi/fcsd/kit/test"
-	kitUtils "git.jetbrains.space/orbi/fcsd/kit/utils"
-	pb "git.jetbrains.space/orbi/fcsd/proto/timesheet"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/domain"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/mocks"
+	kitContext "github.com/turbulent376/kit/context"
+	kitTest "github.com/turbulent376/kit/test"
+	kitUtils "github.com/turbulent376/kit/utils"
+	pb "github.com/turbulent376/proto/activity"
+	"github.com/turbulent376/homeactivity/activity/internal/domain"
+	"github.com/turbulent376/homeactivity/activity/internal/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"

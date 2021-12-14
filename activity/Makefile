@@ -11,15 +11,15 @@ SERVICE = tasks
 # current version
 DOCKER_TAG ?= latest
 # docker registry url
-DOCKER_URL = gcr.io/focusednow
+DOCKER_URL = gcr.io/homeactivity
 
 # database migrations
 DB_ADMIN_USER ?= admin
 DB_ADMIN_PASSWORD ?= admin
 DB_HOST ?= localhost
 DB_NAME ?= home tasks
-DB_TIMESHEET_USER ?= $(SERVICE)
-DB_TIMESHEET_PASSWORD ?= $(SERVICE)
+DB_ACTIVITY_USER ?= $(SERVICE)
+DB_ACTIVITY_PASSWORD ?= $(SERVICE)
 
 DB_DRIVER = postgres
 DB_STRING = "user=$(DB_TASKS_USER) password=$(DB_TASKS_PASSWORD) dbname=$(DB_NAME) host=$(DB_HOST) sslmode=disable"
@@ -31,7 +31,7 @@ DB_MIG_FOLDER = "./db/migrations"
 
 dep:
 	go env -w GO111MODULE=on
-	go env -w GOPRIVATE=git.jetbrains.space/orbi/fcsd/*
+	go env -w GOPRIVATE=https://github.com/turbulent376/homeactivity/*
 	go mod tidy
 
 check-lint-installed:
@@ -69,28 +69,28 @@ kit-version:
 	@if [ -z $(version) ]; then \
   		echo "no version specified"; \
   	else \
-		go mod edit -droprequire git.jetbrains.space/orbi/fcsd/kit; \
+		go mod edit -droprequire https://github.com/turbulent376/homeactivity/kit; \
 		if [ $(version) = "local" ]; then \
-			go mod edit -require=git.jetbrains.space/orbi/fcsd/kit@v0.0.0-local; \
-			go mod edit -replace=git.jetbrains.space/orbi/fcsd/kit=./kit; \
+			go mod edit -require=ghttps://github.com/turbulent376/homeactivity/kit@v0.0.0-local; \
+			go mod edit -replace=https://github.com/turbulent376/homeactivity/kit=./kit; \
 			echo "changing kit version = "$(version); \
-			go mod edit -droprequire git.jetbrains.space/orbi/fcsd/kit; \
-			go mod edit -require=git.jetbrains.space/orbi/fcsd/kit@v0.0.0-local; \
-			go mod edit -replace=git.jetbrains.space/orbi/fcsd/kit=../kit; \
+			go mod edit -droprequire https://github.com/turbulent376/homeactivity/kit; \
+			go mod edit -require=https://github.com/turbulent376/homeactivity/kit@v0.0.0-local; \
+			go mod edit -replace=https://github.com/turbulent376/homeactivity/kit=../kit; \
 			if [ $(version) = "local" ]; then \
-				go mod edit -require=git.jetbrains.space/orbi/fcsd/kit@v0.0.0-local; \
-				go mod edit -replace=git.jetbrains.space/orbi/fcsd/kit=../kit; \
+				go mod edit -require=ghttps://github.com/turbulent376/homeactivity/kit@v0.0.0-local; \
+				go mod edit -replace=https://github.com/turbulent376/homeactivity/kit=../kit; \
 			else \
-				go mod edit -require=git.jetbrains.space/orbi/fcsd/kit@$(version); \
-				go mod edit -replace=git.jetbrains.space/orbi/fcsd/kit=git.jetbrains.space/orbi/fcsd/kit.git@$(version); \
+				go mod edit -require=https://github.com/turbulent376/homeactivity/kit@$(version); \
+				go mod edit -replace=https://github.com/turbulent376/homeactivity/kit=https://github.com/turbulent376/homeactivity/kit.git@$(version); \
 			fi ;\
 		else \
-			go mod edit -require=git.jetbrains.space/orbi/fcsd/kit@$(version); \
-			go mod edit -replace=git.jetbrains.space/orbi/fcsd/kit=git.jetbrains.space/orbi/fcsd/kit.git@$(version); \
+			go mod edit -require=https://github.com/turbulent376/homeactivity/kit@$(version); \
+			go mod edit -replace=https://github.com/turbulent376/homeactivity/kit=https://github.com/turbulent376/homeactivity/kit.git@$(version); \
 			echo "changing kit version = "$(version); \
-			go mod edit -droprequire git.jetbrains.space/orbi/fcsd/kit; \
-			go mod edit -require=git.jetbrains.space/orbi/fcsd/kit@$(version); \
-			go mod edit -replace=git.jetbrains.space/orbi/fcsd/kit=git.jetbrains.space/orbi/fcsd/kit.git@$(version); \
+			go mod edit -droprequire https://github.com/turbulent376/homeactivity/kit; \
+			go mod edit -require=https://github.com/turbulent376/homeactivity/kit@$(version); \
+			go mod edit -replace=https://github.com/turbulent376/homeactivity/kit=https://github.com/turbulent376/homeactivity/kit.git@$(version); \
 		fi ;\
   	fi
 
@@ -105,28 +105,28 @@ proto-version:
 	@if [ -z $(version) ]; then \
   		echo "no version specified"; \
   	else \
-		go mod edit -droprequire git.jetbrains.space/orbi/fcsd/proto; \
+		go mod edit -droprequire https://github.com/turbulent376/homeactivity/proto; \
 		if [ $(version) = "local" ]; then \
-			go mod edit -require=git.jetbrains.space/orbi/fcsd/proto@v0.0.0-local; \
-			go mod edit -replace=git.jetbrains.space/orbi/fcsd/proto=./proto; \
+			go mod edit -require=https://github.com/turbulent376/homeactivity/proto@v0.0.0-local; \
+			go mod edit -replace=https://github.com/turbulent376/homeactivity/proto=./proto; \
 			echo "changing proto version = "$(version); \
-			go mod edit -droprequire git.jetbrains.space/orbi/fcsd/proto; \
-			go mod edit -require=git.jetbrains.space/orbi/fcsd/proto@v0.0.0-local; \
-			go mod edit -replace=git.jetbrains.space/orbi/fcsd/proto=../proto; \
+			go mod edit -droprequire https://github.com/turbulent376/homeactivity/proto; \
+			go mod edit -require=https://github.com/turbulent376/homeactivity/proto@v0.0.0-local; \
+			go mod edit -replace=https://github.com/turbulent376/homeactivity/proto=../proto; \
 			if [ $(version) = "local" ]; then \
-				go mod edit -require=git.jetbrains.space/orbi/fcsd/proto@v0.0.0-local; \
-				go mod edit -replace=git.jetbrains.space/orbi/fcsd/proto=../proto; \
+				go mod edit -require=https://github.com/turbulent376/homeactivity/fcsd/proto@v0.0.0-local; \
+				go mod edit -replace=https://github.com/turbulent376/homeactivity/proto=../proto; \
 			else \
-				go mod edit -require=git.jetbrains.space/orbi/fcsd/proto@$(version); \
-				go mod edit -replace=git.jetbrains.space/orbi/fcsd/proto=git.jetbrains.space/orbi/fcsd/proto.git@$(version); \
+				go mod edit -require=https://github.com/turbulent376/homeactivity/proto@$(version); \
+				go mod edit -replace=https://github.com/turbulent376/homeactivity/proto=https://github.com/turbulent376/homeactivity/proto.git@$(version); \
 			fi ;\
 		else \
-			go mod edit -require=git.jetbrains.space/orbi/fcsd/proto@$(version); \
-			go mod edit -replace=git.jetbrains.space/orbi/fcsd/proto=git.jetbrains.space/orbi/fcsd/proto.git@$(version); \
+			go mod edit -require=https://github.com/turbulent376/homeactivity/proto@$(version); \
+			go mod edit -replace=https://github.com/turbulent376/homeactivity/proto=git.jetbrains.space/orbi/fcsd/proto.git@$(version); \
 			echo "changing proto version  = "$(version); \
-			go mod edit -droprequire git.jetbrains.space/orbi/fcsd/proto; \
-			go mod edit -require=git.jetbrains.space/orbi/fcsd/proto@$(version); \
-			go mod edit -replace=git.jetbrains.space/orbi/fcsd/proto=git.jetbrains.space/orbi/fcsd/proto.git@$(version); \
+			go mod edit -droprequire https://github.com/turbulent376/homeactivity/proto; \
+			go mod edit -require=https://github.com/turbulent376/homeactivity/proto@$(version); \
+			go mod edit -replace=https://github.com/turbulent376/homeactivity/proto=https://github.com/turbulent376/homeactivity/proto.git@$(version); \
 		fi ;\
   	fi
 

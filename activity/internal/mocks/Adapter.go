@@ -5,9 +5,9 @@ package mocks
 import (
 	context "context"
 
-	config "git.jetbrains.space/orbi/fcsd/timesheet/internal/config"
+	config "github.com/turbulent376/homeactivity/activity/internal/config"
 
-	domain "git.jetbrains.space/orbi/fcsd/timesheet/internal/domain"
+	domain "github.com/turbulent376/homeactivity/activity/internal/domain"
 
 	mock "github.com/stretchr/testify/mock"
 )

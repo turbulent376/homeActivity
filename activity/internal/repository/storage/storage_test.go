@@ -5,10 +5,10 @@ package storage
 
 import (
 	"context"
-	kitContext "git.jetbrains.space/orbi/fcsd/kit/context"
-	kitUtils "git.jetbrains.space/orbi/fcsd/kit/utils"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/config"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/domain"
+	kitContext "github.com/turbulent376/homeactivity/kit/context"
+	kitUtils "github.com/turbulent376/homeactivity/kit/utils"
+	"github.com/turbulent376/homeactivity/activity/internal/config"
+	"github.com/turbulent376/homeactivity/activity/internal/domain"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"testing"

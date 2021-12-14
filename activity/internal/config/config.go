@@ -1,15 +1,15 @@
 package config
 
 import (
-	"../../../kit/cache/redis"
-	kitConfig "git.jetbrains.space/orbi/fcsd/kit/config"
-	"git.jetbrains.space/orbi/fcsd/kit/db"
-	"git.jetbrains.space/orbi/fcsd/kit/grpc"
-	"git.jetbrains.space/orbi/fcsd/kit/log"
-	"git.jetbrains.space/orbi/fcsd/kit/queue"
-	"git.jetbrains.space/orbi/fcsd/kit/service"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/logger"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/meta"
+	"github.com/turbulent376/kit/cache/redis"
+	kitConfig "github.com/turbulent376/kit/config"
+	"github.com/turbulent376/kit/db"
+	"github.com/turbulent376/kit/grpc"
+	"github.com/turbulent376/kit/log"
+	"github.com/turbulent376/kit/queue"
+	"github.com/turbulent376/kit/service"
+	"github.com/turbulent376/homeactivity/activity/internal/logger"
+	"github.com/turbulent376/homeactivity/activity/internal/meta"
 	"os"
 	"path/filepath"
 )

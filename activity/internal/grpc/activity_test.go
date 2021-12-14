@@ -5,10 +5,10 @@ package grpc
 
 import (
 	"context"
-	kitContext "git.jetbrains.space/orbi/fcsd/kit/context"
-	kitGrpc "git.jetbrains.space/orbi/fcsd/kit/grpc"
-	pb "git.jetbrains.space/orbi/fcsd/proto/timesheet"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/config"
+	kitContext "github.com/turbulent376/kit/context"
+	kitGrpc "github.com/turbulent376/kit/grpc"
+	pb "github.com/turbulent376/proto/activity"
+	"github.com/turbulent376/homeactivity/activity/internal/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"google.golang.org/protobuf/types/known/timestamppb"

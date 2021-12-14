@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	domain "git.jetbrains.space/orbi/fcsd/timesheet/internal/domain"
+	domain "github.com/turbulent376/homeactivity/activity/internal/domain"
 	mock "github.com/stretchr/testify/mock"
 )
 

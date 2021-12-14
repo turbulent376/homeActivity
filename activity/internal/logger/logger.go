@@ -1,8 +1,8 @@
 package logger
 
 import (
-	"git.jetbrains.space/orbi/fcsd/kit/log"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/meta"
+	"github.com/turbulent376/kit/log"
+	"github.com/turbulent376/homeactivity/activity/internal/meta"
 )
 
 var Logger = log.Init(&log.Config{Level: log.TraceLevel})

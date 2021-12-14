@@ -2,11 +2,11 @@
 package grpc
 
 import (
-	kitGrpc "git.jetbrains.space/orbi/fcsd/kit/grpc"
-	pb "git.jetbrains.space/orbi/fcsd/proto/timesheet"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/domain"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/logger"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/meta"
+	kitGrpc "github.com/turbulent376/kit/grpc"
+	pb "github.com/turbulent376/proto/activity"
+	"github.com/turbulent376/homeactivity/activity/internal/domain"
+	"github.com/turbulent376/homeactivity/activity/internal/logger"
+	"github.com/turbulent376/homeactivity/activity/internal/meta"
 )
 
 // Server implements gRPC server

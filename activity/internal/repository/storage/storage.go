@@ -3,10 +3,10 @@ package storage
 import (
 	"context"
 	"encoding/json"
-	"git.jetbrains.space/orbi/fcsd/kit/log"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/domain"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/errors"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/logger"
+	"github.com/turbulent376/kit/log"
+	"github.com/turbulent376/homeactivity/activity/internal/domain"
+	"github.com/turbulent376/homeactivity/activity/internal/errors"
+	"github.com/turbulent376/homeactivity/activity/internal/logger"
 	"github.com/go-redis/redis"
 	"time"
 )

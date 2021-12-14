@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/domain"
+	"github.com/turbulent376/homeactivity/activity/internal/domain"
 )
 
 func (a *adapterImpl) toActivityDto(t *domain.Activity) *activity {

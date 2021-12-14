@@ -3,9 +3,9 @@ package main
 
 import (
 	"context"
-	kitContext "github.com/turbulent376/homeactivity/kit/context"
-	"git.jetbrains.space/orbi/fcsd/timesheet"
-	"git.jetbrains.space/orbi/fcsd/timesheet/internal/logger"
+	kitContext "github.com/turbulent376/kit/context"
+	"github.com/turbulent376/homeactivity/activity"
+	"github.com/turbulent376/homeactivity/activity/internal/logger"
 	"google.golang.org/api/tasks/v1"
 	"os"
 	"os/signal"
