@@ -36,7 +36,7 @@ var (
 		return er.WithBuilder(pb.ErrCodeActivityTimeEmpty, "time can not be empty").C(ctx).Err()
 	}
 	ErrActivityStorageCreate = func(cause error, ctx context.Context) error {
-		return er.WrapWithBuilder(cause, pb.ErrCodeActivityStorageCreate, "").C(ctx).Err()
+		return er.WrapWithBuilder(cause, pb.ErrCodeActivityError, "").C(ctx).Err()
 	}
 	ErrActivityStorageGetDb = func(cause error, ctx context.Context, id string) error {
 		return er.WrapWithBuilder(cause, pb.ErrCodeActivityStorageGetDb, "").F(er.FF{"id": id}).C(ctx).Err()

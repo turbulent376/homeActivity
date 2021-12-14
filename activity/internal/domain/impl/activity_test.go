@@ -2,143 +2,114 @@ package impl
 
 import (
 	"context"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/suite"
+	"github.com/turbulent376/homeactivity/activity/internal/domain"
+	"github.com/turbulent376/homeactivity/activity/internal/mocks"
 	kitContext "github.com/turbulent376/kit/context"
 	kitTest "github.com/turbulent376/kit/test"
 	kitUtils "github.com/turbulent376/kit/utils"
 	pb "github.com/turbulent376/proto/activity"
-	"github.com/turbulent376/homeactivity/activity/internal/domain"
-	"github.com/turbulent376/homeactivity/activity/internal/mocks"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/suite"
 	"testing"
 	"time"
 )
 
-type timesheetTestSuite struct {
+type activityTestSuite struct {
 	suite.Suite
-	timetableStorage *mocks.TimetableStorage
-	eventStorage     *mocks.EventStorage
-	timesheetService domain.TimesheetService
+	activityStorage     *mocks.ActivityStorage
+	activityTypeStorage *mocks.ActivityTypeStorage
+	activityService     domain.ActivityService
 	ctx              context.Context
 }
 
-func (s *timesheetTestSuite) SetupSuite() {
-	s.timetableStorage = &mocks.TimetableStorage{}
-	s.eventStorage = &mocks.EventStorage{}
+func (s *activityTestSuite) SetupSuite() {
+	s.activityStorage = &mocks.ActivityStorage{}
+	s.activityTypeStorage = &mocks.ActivityTypeStorage{}
 	s.ctx = kitContext.NewRequestCtx().Test().ToContext(context.Background())
-	s.timesheetService = NewTimesheetService(s.timetableStorage, s.eventStorage)
+	s.activityService = NewActivityService(s.activityStorage, s.activityTypeStorage)
 }
 
-func (s *timesheetTestSuite) SetupTest() {
-	s.timetableStorage.ExpectedCalls = nil
-	s.timetableStorage.On("CreateTimetable",
+func (s *activityTestSuite) SetupTest() {
+	s.activityStorage.ExpectedCalls = nil
+	s.activityStorage.On("CreateTimetable",
 		mock.AnythingOfType("*context.valueCtx"),
 		mock.AnythingOfType("*domain.Timesheet")).
-		Return(&domain.Timesheet{
+		Return(&domain.Activity{
 			Id:        kitUtils.NewId(),
 			Owner:     "123",
 			DateFrom:  time.Now(),
 			DateTo:    time.Now(),
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
 		}, nil)
-	s.timetableStorage.On("UpdateTimetable",
+	s.activityStorage.On("UpdateTimetable",
 		mock.AnythingOfType("*context.valueCtx"),
 		mock.AnythingOfType("*domain.Timesheet")).
-		Return(&domain.Timesheet{
+		Return(&domain.Activity{
 			Id:        kitUtils.NewId(),
 			Owner:     "123",
 			DateFrom:  time.Now(),
 			DateTo:    time.Now(),
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
 		}, nil)
-	s.timetableStorage.On("GetTimetable",
+	s.activityStorage.On("GetTimetable",
 		mock.AnythingOfType("*context.valueCtx"),
 		mock.AnythingOfType("string")).
-		Return(true, &domain.Timesheet{
+		Return(true, &domain.Activity{
 			Id:        kitUtils.NewId(),
 			Owner:     "123",
 			DateFrom:  time.Now(),
 			DateTo:    time.Now(),
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
 		}, nil)
-	s.timetableStorage.On("SearchTimetable",
+	s.activityStorage.On("SearchTimetable",
 		mock.AnythingOfType("*context.valueCtx"),
 		mock.AnythingOfType("*domain.SearchTimesheetRequest")).
-		Return(true, &domain.Timesheet{
+		Return(true, &domain.Activity{
 			Id:        kitUtils.NewId(),
 			Owner:     "123",
 			DateFrom:  time.Time{},
 			DateTo:    time.Now(),
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
 		}, nil)
-	s.timetableStorage.On("DeleteTimetable",
+	s.activityStorage.On("DeleteTimetable",
 		mock.AnythingOfType("*context.valueCtx"),
 		mock.AnythingOfType("string")).
 		Return(nil)
 
-	s.eventStorage.ExpectedCalls = nil
-	s.eventStorage.On("CreateEvent",
+	s.activityTypeStorage.ExpectedCalls = nil
+	s.activityTypeStorage.On("CreateEvent",
 		mock.AnythingOfType("*context.valueCtx"),
 		mock.AnythingOfType("*domain.Event")).
-		Return(&domain.Event{
+		Return(&domain.ActivityType{
 			Id:          kitUtils.NewId(),
-			TimesheetId: kitUtils.NewId(),
-			Subject:     "test subject",
-			WeekDay:     "Monday",
-			TimeStart:   time.Now(),
-			TimeEnd:     time.Now(),
-			CreatedAt:   time.Now(),
-			UpdatedAt:   time.Now(),
 		}, nil)
-	s.eventStorage.On("UpdateEvent",
+	s.activityTypeStorage.On("UpdateEvent",
 		mock.AnythingOfType("*context.valueCtx"),
 		mock.AnythingOfType("*domain.Event")).
-		Return(&domain.Event{
+		Return(&domain.ActivityType{
 			Id:          kitUtils.NewId(),
-			TimesheetId: kitUtils.NewId(),
-			Subject:     "test subject 2",
-			WeekDay:     "Monday",
-			TimeStart:   time.Now(),
-			TimeEnd:     time.Now(),
-			CreatedAt:   time.Now(),
-			UpdatedAt:   time.Now(),
 		}, nil)
-	s.eventStorage.On("GetEvent",
+	s.activityTypeStorage.On("GetEvent",
 		mock.AnythingOfType("*context.valueCtx"),
 		mock.AnythingOfType("string")).
-		Return(true, &domain.Event{
+		Return(true, &domain.ActivityType{
 			Id:          kitUtils.NewId(),
-			TimesheetId: kitUtils.NewId(),
-			Subject:     "test",
-			WeekDay:     "Monday",
-			TimeStart:   time.Now(),
-			TimeEnd:     time.Now(),
-			CreatedAt:   time.Now(),
-			UpdatedAt:   time.Now(),
 		}, nil)
-	s.eventStorage.On("DeleteEvent",
+	s.activityTypeStorage.On("DeleteEvent",
 		mock.AnythingOfType("*context.valueCtx"),
 		mock.AnythingOfType("string")).
 		Return(nil)
 }
 
-func TestTimesheetSuite(t *testing.T) {
-	suite.Run(t, new(timesheetTestSuite))
+func TestActivitySuite(t *testing.T) {
+	suite.Run(t, new(activityTestSuite))
 }
 
-func (s *timesheetTestSuite) Test_Create_WhenEmptyName_Fail() {
-	_, err := s.timesheetService.Create(s.ctx, &domain.Timesheet{})
-	kitTest.AssertAppErr(s.T(), err, pb.ErrCodeTimesheetOwnerEmpty)
+func (s *activityTestSuite) Test_Create_WhenEmptyName_Fail() {
+	_, err := s.activityService.Create(s.ctx, &domain.Activity{})
+	kitTest.AssertAppErr(s.T(), err, pb.ErrCodeActivityOwnerEmpty)
 }
 
-func (s *timesheetTestSuite) Test_Create_Ok() {
+func (s *activityTestSuite) Test_Create_Ok() {
 
-	tt, err := s.timesheetService.Create(s.ctx, &domain.Timesheet{
+	tt, err := s.activityService.Create(s.ctx, &domain.Activity{
 		Owner:    "123",
 		DateFrom: time.Now(),
 		DateTo:   time.Now(),
@@ -151,18 +122,15 @@ func (s *timesheetTestSuite) Test_Create_Ok() {
 	assert.NotEmpty(s.T(), tt.Owner)
 	assert.NotEmpty(s.T(), tt.DateFrom)
 	assert.NotEmpty(s.T(), tt.DateTo)
-	assert.NotEmpty(s.T(), tt.CreatedAt)
-	assert.NotEmpty(s.T(), tt.UpdatedAt)
-	assert.Empty(s.T(), tt.DeletedAt)
 }
 
-func (s *timesheetTestSuite) Test_Update_Fail() {
-	_, err := s.timesheetService.Update(s.ctx, &domain.Timesheet{})
-	kitTest.AssertAppErr(s.T(), err, pb.ErrCodeTimesheetIdEmpty)
+func (s *activityTestSuite) Test_Update_Fail() {
+	_, err := s.activityService.Update(s.ctx, &domain.Activity{})
+	kitTest.AssertAppErr(s.T(), err, pb.ErrCodeActivityIdEmpty)
 }
 
-func (s *timesheetTestSuite) Test_Update_Ok() {
-	_, err := s.timesheetService.Update(s.ctx, &domain.Timesheet{
+func (s *activityTestSuite) Test_Update_Ok() {
+	_, err := s.activityService.Update(s.ctx, &domain.Activity{
 		Id:       kitUtils.NewId(),
 		Owner:    "123",
 		DateFrom: time.Now(),
@@ -175,13 +143,13 @@ func (s *timesheetTestSuite) Test_Update_Ok() {
 
 }
 
-func (s *timesheetTestSuite) Test_Get_Fail() {
-	_, _, err := s.timesheetService.Get(s.ctx, "")
-	kitTest.AssertAppErr(s.T(), err, pb.ErrCodeTimesheetIdEmpty)
+func (s *activityTestSuite) Test_Get_Fail() {
+	_, _, err := s.activityService.Get(s.ctx, "")
+	kitTest.AssertAppErr(s.T(), err, pb.ErrCodeActivityIdEmpty)
 }
 
-func (s *timesheetTestSuite) Test_Get_Ok() {
-	_, tt, err := s.timesheetService.Get(s.ctx, kitUtils.NewId())
+func (s *activityTestSuite) Test_Get_Ok() {
+	_, tt, err := s.activityService.Get(s.ctx, kitUtils.NewId())
 	if err != nil {
 		s.T().Fatal(err)
 	}
@@ -189,73 +157,49 @@ func (s *timesheetTestSuite) Test_Get_Ok() {
 	assert.NotEmpty(s.T(), tt)
 }
 
-func (s *timesheetTestSuite) Test_Search_Fail() {
-	_, _, err := s.timesheetService.Search(s.ctx, &domain.SearchTimesheetRequest{})
-	kitTest.AssertAppErr(s.T(), err, pb.ErrCodeTimesheetOwnerEmpty)
-}
 
-func (s *timesheetTestSuite) Test_Search_Ok() {
-	_, tt, err := s.timesheetService.Search(s.ctx, &domain.SearchTimesheetRequest{
-		Owner: "123",
-	})
-	if err != nil {
-		s.T().Fatal(err)
-	}
-	assert.Nil(s.T(), err)
-	assert.NotEmpty(s.T(), tt)
-}
-
-func (s *timesheetTestSuite) Test_Delete_Ok() {
-	err := s.timesheetService.Delete(s.ctx, kitUtils.NewId())
+func (s *activityTestSuite) Test_Delete_Ok() {
+	err := s.activityService.Delete(s.ctx, kitUtils.NewId())
 	if err != nil {
 		s.T().Fatal(err)
 	}
 	assert.Nil(s.T(), err)
 }
 
-func (s *timesheetTestSuite) Test_CreateEvent_WhenEmptyName_Fail() {
-	_, err := s.timesheetService.CreateEvent(s.ctx, &domain.Event{})
-	kitTest.AssertAppErr(s.T(), err, pb.ErrCodeTimesheetSubjectEmpty)
+func (s *activityTestSuite) Test_CreateActivityType_WhenEmptyName_Fail() {
+	_, err := s.activityService.CreateActivityType(s.ctx, &domain.ActivityType{})
+	kitTest.AssertAppErr(s.T(), err, pb.ErrCodeActivityNameIsEmpty)
 }
 
-func (s *timesheetTestSuite) Test_CreateEvent_Ok() {
+func (s *activityTestSuite) Test_CreateActivityType_Ok() {
 
-	ev, err := s.timesheetService.CreateEvent(s.ctx, &domain.Event{
+	ev, err := s.activityService.CreateActivityType(s.ctx, &domain.ActivityType{
 		Id:          "321",
-		TimesheetId: "321",
-		Subject:     "test subject",
-		WeekDay:     "Monday",
-		TimeStart:   time.Now(),
-		TimeEnd:     time.Now(),
+		Family: "321",
+		Name:     "test subject",
+		Description:     "Monday",
 	})
 	if err != nil {
 		s.T().Fatal(err)
 	}
 	assert.NotEmpty(s.T(), ev)
 	assert.NotEmpty(s.T(), ev.Id)
-	assert.NotEmpty(s.T(), ev.TimesheetId)
-	assert.NotEmpty(s.T(), ev.Subject)
-	assert.NotEmpty(s.T(), ev.WeekDay)
-	assert.NotEmpty(s.T(), ev.TimeStart)
-	assert.NotEmpty(s.T(), ev.TimeEnd)
-	assert.NotEmpty(s.T(), ev.CreatedAt)
-	assert.NotEmpty(s.T(), ev.UpdatedAt)
-	assert.Empty(s.T(), ev.DeletedAt)
+	assert.NotEmpty(s.T(), ev.Family)
+	assert.NotEmpty(s.T(), ev.Name)
+	assert.NotEmpty(s.T(), ev.Description)
 }
 
-func (s *timesheetTestSuite) Test_UpdateEvent_Fail() {
-	_, err := s.timesheetService.UpdateEvent(s.ctx, &domain.Event{})
-	kitTest.AssertAppErr(s.T(), err, pb.ErrCodeTimesheetNotFound)
+func (s *activityTestSuite) Test_UpdateActivityType_Fail() {
+	_, err := s.activityService.UpdateActivityType(s.ctx, &domain.ActivityType{})
+	kitTest.AssertAppErr(s.T(), err, pb.ErrCodeActivityNotFound)
 }
 
-func (s *timesheetTestSuite) Test_UpdateEvent_Ok() {
-	_, err := s.timesheetService.UpdateEvent(s.ctx, &domain.Event{
+func (s *activityTestSuite) Test_UpdateEvent_Ok() {
+	_, err := s.activityService.UpdateActivityType(s.ctx, &domain.ActivityType{
 		Id:          kitUtils.NewId(),
-		TimesheetId: kitUtils.NewId(),
-		Subject:     "test subject 2",
-		WeekDay:     "Monday",
-		TimeStart:   time.Now(),
-		TimeEnd:     time.Now(),
+		Family: kitUtils.NewId(),
+		Name:     "test subject 2",
+		Description:     "Monday",
 	})
 	if err != nil {
 		s.T().Fatal(err)
@@ -263,18 +207,18 @@ func (s *timesheetTestSuite) Test_UpdateEvent_Ok() {
 	assert.Nil(s.T(), err)
 }
 
-func (s *timesheetTestSuite) Test_GetEvent_Fail() {
-	_, tt, err := s.timesheetService.GetEvent(s.ctx, "123")
+func (s *activityTestSuite) Test_GetEvent_Fail() {
+	_, tt, err := s.activityService.GetActivityType(s.ctx, "123")
 	if err != nil {
 		s.T().Fatal(err)
 	}
 	assert.Nil(s.T(), err)
 	assert.NotEmpty(s.T(), tt)
-	assert.NotEqual(s.T(), tt, &domain.Event{})
+	assert.NotEqual(s.T(), tt, &domain.ActivityType{})
 }
 
-func (s *timesheetTestSuite) Test_GetEvent_Ok() {
-	_, tt, err := s.timesheetService.GetEvent(s.ctx, "321")
+func (s *activityTestSuite) Test_GetActivityType_Ok() {
+	_, tt, err := s.activityService.GetActivityType(s.ctx, "321")
 	if err != nil {
 		s.T().Fatal(err)
 	}
@@ -282,8 +226,8 @@ func (s *timesheetTestSuite) Test_GetEvent_Ok() {
 	assert.NotEmpty(s.T(), tt)
 }
 
-func (s *timesheetTestSuite) Test_DeleteEvent_Ok() {
-	err := s.timesheetService.DeleteEvent(s.ctx, "321")
+func (s *activityTestSuite) Test_DeleteActivityType_Ok() {
+	err := s.activityService.DeleteActivityType(s.ctx, "321")
 	if err != nil {
 		s.T().Fatal(err)
 	}

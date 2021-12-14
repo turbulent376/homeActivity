@@ -5,23 +5,23 @@ package grpc
 
 import (
 	"context"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
+	"github.com/turbulent376/homeactivity/activity/internal/config"
 	kitContext "github.com/turbulent376/kit/context"
 	kitGrpc "github.com/turbulent376/kit/grpc"
 	pb "github.com/turbulent376/proto/activity"
-	"github.com/turbulent376/homeactivity/activity/internal/config"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/suite"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"testing"
 )
 
-type timesheetGrpcTestSuite struct {
+type activityGrpcTestSuite struct {
 	suite.Suite
 	ctx         context.Context
-	clTimesheet pb.TimesheetServiceClient
+	clActivity pb.ActivityServiceClient
 }
 
-func (s *timesheetGrpcTestSuite) SetupSuite() {
+func (s *activityGrpcTestSuite) SetupSuite() {
 
 	// setup context
 	s.ctx = kitContext.NewRequestCtx().Test().ToContext(context.Background())
@@ -37,44 +37,36 @@ func (s *timesheetGrpcTestSuite) SetupSuite() {
 	if err != nil {
 		s.T().Fatal(err)
 	}
-	s.clTimesheet = pb.NewTimesheetServiceClient(cl.Conn)
+	s.clAtivity = pb.NewActivityServiceClient(cl.Conn)
 }
 
-func TestTimesheetSuite(t *testing.T) {
-	suite.Run(t, new(timesheetGrpcTestSuite))
+func TestActivitySuite(t *testing.T) {
+	suite.Run(t, new(activityGrpcTestSuite))
 }
 
-func (s *timesheetGrpcTestSuite) getCreateTimesheetRequest() *pb.CreateTimesheetRequest {
+func (s *timesheetGrpcTestSuite) getCreateActivityRequest() *pb.CreateTimesheetRequest {
 
-	return &pb.CreateTimesheetRequest{
-		Owner:    "123",
-		DateFrom: timestamppb.Now(),
-		DateTo:   timestamppb.Now(),
+	return &pb.CreateActivityRequest{
 	}
 }
 
-func (s *timesheetGrpcTestSuite) getCreateEventRequest() *pb.CreateEventRequest {
+func (s *activityGrpcTestSuite) getCreateActivityTypeRequest() *pb.CreateActivityTypeRequest {
 
-	return &pb.CreateEventRequest{
-		TimesheetId: "123",
-		Subject:     "123",
-		WeekDay:     "Monday",
-		TimeStart:   timestamppb.Now(),
-		TimeEnd:     timestamppb.Now(),
+	return &pb.CreateActivityTypeRequest{
 	}
 }
 
-func (s *timesheetGrpcTestSuite) TestTimesheetCRUD() {
+func (s *activityGrpcTestSuite) TestActivityCRUD() {
 
 	// create a new consultant
-	cl, err := s.clTimesheet.Create(s.ctx, s.getCreateTimesheetRequest())
+	cl, err := s.clActivity.Create(s.ctx, s.getCreateActivityRequest())
 	if err != nil {
 		s.T().Fatal(err)
 	}
 	assert.NotEmpty(s.T(), cl.Id)
 
 	// get by id
-	cl, err = s.clTimesheet.Get(s.ctx, &pb.TimesheetIdRequest{Id: cl.Id})
+	cl, err = s.clActivity.Get(s.ctx, &pb.ActivityIdRequest{Id: cl.Id})
 	if err != nil {
 		s.T().Fatal()
 	}
@@ -82,7 +74,7 @@ func (s *timesheetGrpcTestSuite) TestTimesheetCRUD() {
 	assert.NotEmpty(s.T(), cl.Id)
 
 	// set status to active
-	cl, err = s.clTimesheet.Update(s.ctx, &pb.UpdateTimesheetRequest{
+	cl, err = s.clActivity.Update(s.ctx, &pb.UpdateActivityRequest{
 		Id:       cl.Id,
 		Owner:    cl.Owner,
 		DateFrom: timestamppb.Now(),
@@ -94,10 +86,8 @@ func (s *timesheetGrpcTestSuite) TestTimesheetCRUD() {
 	assert.Equal(s.T(), "123", cl.Owner)
 
 	//search
-	sl, err := s.clTimesheet.Search(s.ctx, &pb.SearchTimesheetRequest{
+	sl, err := s.clActivity.Search(s.ctx, &pb.ListActivitiesRequest{
 		Owner:          "123",
-		DateFromSearch: timestamppb.Now(),
-		DateToSearch:   timestamppb.Now(),
 	})
 	if err != nil {
 		s.T().Fatal(err)
@@ -105,38 +95,37 @@ func (s *timesheetGrpcTestSuite) TestTimesheetCRUD() {
 	assert.NotEmpty(s.T(), sl)
 
 	// delete sample
-	_, err = s.clTimesheet.Delete(s.ctx, &pb.TimesheetIdRequest{Id: cl.Id})
+	_, err = s.clActivity.Delete(s.ctx, &pb.ActivityIdRequest{Id: cl.Id})
 	if err != nil {
 		s.T().Fatal()
 	}
 }
 
-func (s *timesheetGrpcTestSuite) TestEventCRUD() {
+func (s *activityGrpcTestSuite) TestActivityTypeCRUD() {
 
 	// create a new consultant
-	cl, err := s.clTimesheet.CreateEvent(s.ctx, s.getCreateEventRequest())
+	cl, err := s.clActivity.CreateActivityType(s.ctx, s.getCreateActivityTypeRequest())
 	if err != nil {
 		s.T().Fatal(err)
 	}
 	assert.NotEmpty(s.T(), cl.Id)
 
 	// get by Id
-	cl, err = s.clTimesheet.GetEvent(s.ctx, &pb.EventIdRequest{Id: cl.Id})
+	cl, err = s.clActivity.GetActivityType(s.ctx, &pb.ActivityTypeIdRequest{Id: cl.Id})
 	if err != nil {
 		s.T().Fatal()
 	}
 	assert.NotEmpty(s.T(), cl)
 	assert.NotEmpty(s.T(), cl.Id)
-	assert.NotEmpty(s.T(), cl.WeekDay)
+	assert.NotEmpty(s.T(), cl.Name)
 
 	// set status to active
-	cl, err = s.clTimesheet.UpdateEvent(s.ctx, &pb.UpdateEventRequest{
+	cl, err = s.clActivity.UpdateActivityType(s.ctx, &pb.UpdateActivityTypeRequest{
 		Id:          cl.Id,
-		TimesheetId: "123",
-		Subject:     "321",
-		WeekDay:     "Monday",
-		TimeStart:   timestamppb.Now(),
-		TimeEnd:     timestamppb.Now(),
+		Owner: "123",
+		Family:     "321",
+		Name:     "Monday",
+		Description:   "Description",
 	})
 	if err != nil {
 		s.T().Fatal()
@@ -144,7 +133,7 @@ func (s *timesheetGrpcTestSuite) TestEventCRUD() {
 	assert.Equal(s.T(), "321", cl.Subject)
 
 	// delete Event
-	_, err = s.clTimesheet.DeleteEvent(s.ctx, &pb.EventIdRequest{Id: cl.Id})
+	_, err = s.clActivity.DeleteActivityType(s.ctx, &pb.ActivityTypeIdRequest{Id: cl.Id})
 	if err != nil {
 		s.T().Fatal(err)
 	}

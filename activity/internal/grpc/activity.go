@@ -6,7 +6,7 @@ import (
 )
 
 func (s *Server) Create(ctx context.Context, rq *pb.CreateActivityRequest) (*pb.Activity, error) {
-	activity, err := s.activityService.Create(ctx, s.toActivityPb(rq))
+	activity, err := s.activityService.Create(ctx, s.toCreateActivityDomain(rq))
 	if err != nil {
 		return nil, err
 	}
@@ -14,7 +14,7 @@ func (s *Server) Create(ctx context.Context, rq *pb.CreateActivityRequest) (*pb.
 }
 
 func (s *Server) Update(ctx context.Context, rq *pb.UpdateActivityRequest) (*pb.Activity, error) {
-	activity, err := s.activityService.Update(ctx, s.toUpdateTimesheetDomain(rq))
+	activity, err := s.activityService.Update(ctx, s.toUpdateActivityDomain(rq))
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (s *Server) CreateActivityType(ctx context.Context, rq *pb.CreateActivityTy
 	return s.toActivityTypePb(res), nil
 }
 
-func (s *Server) UpdateEvent(ctx context.Context, rq *pb.UpdateEventRequest) (*pb.Event, error) {
+func (s *Server) UpdateActivityType(ctx context.Context, rq *pb.UpdateActivityTypeRequest) (*pb.ActivityType, error) {
 	res, err := s.activityService.UpdateActivityType(ctx, s.toUpdateActivityTypeDomain(rq))
 
 	if err != nil {
@@ -72,7 +72,7 @@ func (s *Server) GetActivityType(ctx context.Context, rq *pb.ActivityTypeIdReque
 	return s.toActivityTypePb(res), nil
 }
 
-func (s *Server) DeleteActivityType(ctx context.Context, rq *pb.ActivityIdRequest) (*pb.EmptyResponse, error) {
+func (s *Server) DeleteActivityType(ctx context.Context, rq *pb.ActivityTypeIdRequest) (*pb.EmptyResponse, error) {
 	err := s.activityService.DeleteActivityType(ctx, rq.Id)
 
 	if err != nil {

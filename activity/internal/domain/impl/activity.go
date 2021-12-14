@@ -2,11 +2,11 @@ package impl
 
 import (
 	"context"
-	"github.com/turbulent376/kit/log"
-	"github.com/turbulent376/kit/utils"
 	"github.com/turbulent376/homeactivity/activity/internal/domain"
 	"github.com/turbulent376/homeactivity/activity/internal/errors"
 	"github.com/turbulent376/homeactivity/activity/internal/logger"
+	"github.com/turbulent376/kit/log"
+	"github.com/turbulent376/kit/utils"
 )
 
 // sampleTimesheetImpl - implements SampleService interface
@@ -15,7 +15,7 @@ type activitytImpl struct {
 	storageT domain.ActivityTypeStorage
 }
 
-func NewTimesheetService(
+func NewActivityService(
 	storageA domain.ActivityStorage,
 	storageT domain.ActivityTypeStorage,
 ) domain.ActivityService {
