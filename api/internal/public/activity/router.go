@@ -1,7 +1,7 @@
-package timesheet
+package activity
 
 import (
-	kitHttp "git.jetbrains.space/orbi/fcsd/kit/http"
+	kitHttp "github.com/turbulent376/kit/http"
 	"github.com/gorilla/mux"
 )
 
@@ -10,16 +10,17 @@ type Router struct {
 }
 
 func (r *Router) Set(authRouter, noAuthRouter *mux.Router) {
-	authRouter.HandleFunc("/api/timesheet/timetable", r.c.CreateTimesheet).Methods("POST")
-	authRouter.HandleFunc("/api/timesheet/timetable/{id}", r.c.UpdateTimesheet).Methods("PUT")
-	authRouter.HandleFunc("/api/timesheet/timetable/{id}", r.c.GetTimesheet).Methods("GET")
-	authRouter.HandleFunc("/api/timesheet/timetable/{owner}", r.c.SearchTimesheet).Methods("GET")
-	authRouter.HandleFunc("/api/timesheet/timetable/{id}", r.c.DeleteTimesheet).Methods("DELETE")
-	authRouter.HandleFunc("/api/timesheet/event", r.c.CreateEvent).Methods("POST")
-	authRouter.HandleFunc("/api/timesheet/event/{id}", r.c.UpdateEvent).Methods("PUT")
-	authRouter.HandleFunc("/api/timesheet/event/{id}", r.c.GetEvent).Methods("GET")
-	authRouter.HandleFunc("/api/timesheet/event/{id}", r.c.DeleteEvent).Methods("DELETE")
-	authRouter.HandleFunc("/api/timesheet/event/{timesheetId}", r.c.SearchEvents).Methods("GET")
+	authRouter.HandleFunc("/api/activity/activity", r.c.CreateActivity).Methods("POST")
+	authRouter.HandleFunc("/api/activity/activity/{id}", r.c.UpdateActivity).Methods("PUT")
+	authRouter.HandleFunc("/api/activity/activity/{id}", r.c.GetActivity).Methods("GET")
+	authRouter.HandleFunc("/api/activity/list/{owner}", r.c.ListActivities).Methods("GET")
+	authRouter.HandleFunc("/api/activity/listfamily/{family}", r.c.ListActivitiesByFamily).Methods("GET")
+	authRouter.HandleFunc("/api/activity/activity/{id}", r.c.DeleteActivity).Methods("DELETE")
+	authRouter.HandleFunc("/api/activity/activitytype", r.c.CreateActivityType).Methods("POST")
+	authRouter.HandleFunc("/api/activity/activitytype/{id}", r.c.UpdateActivityType).Methods("PUT")
+	authRouter.HandleFunc("/api/activity/activitytype/{id}", r.c.GetActivityType).Methods("GET")
+	authRouter.HandleFunc("/api/activity/activitytype/{id}", r.c.DeleteActivityType).Methods("DELETE")
+	authRouter.HandleFunc("/api/activity/listactivitytypes/{family}", r.c.ListActivityTypes).Methods("GET")
 }
 
 func NewRouter(c Controller) kitHttp.RouteSetter {

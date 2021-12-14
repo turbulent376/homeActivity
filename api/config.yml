@@ -20,23 +20,7 @@ adapters:
     grpc:
       host: ${AUTH_GRPC_HOST|localhost}
       port: ${AUTH_GRPC_PORT|50060}
-  billing:
+  activity:
     grpc:
-      host: ${BILLING_GRPC_HOST|localhost}
-      port: ${BILLING_GRPC_PORT|50061}
-  report:
-    grpc:
-      host: ${REPORT_GRPC_HOST|localhost}
-      port: ${REPORT_GRPC_PORT|50065}
-  storage:
-    grpc:
-      host: ${STORAGE_GRPC_HOST|localhost}
-      port: ${STORAGE_GRPC_PORT|50064}
-  timesheet:
-    grpc:
-      host: ${TIMESHEET_GRPC_HOST|localhost}
-      port: ${TIMESHEET_GRPC_PORT|50066}
-  location:
-    grpc:
-      host: ${LOCATION_GRPC_HOST|localhost}
-      port: ${LOCATION_GRPC_PORT|50062}
+      host: ${ACTIVITY_GRPC_HOST|localhost}
+      port: ${ACTIVITY_GRPC_PORT|50066}

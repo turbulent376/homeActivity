@@ -1,53 +1,59 @@
-package timesheet
+package activity
 
 import (
 	"time"
 )
 
-type Timesheet struct {
+type Activity struct {
 	Id      string `json:"id"` // Id
 	Owner   string `json:"owner"`
+	Family  string `json:"family"`
+	Type    string `json:"type"`
 	DateFrom time.Time `json:"dateFrom"`
 	DateTo time.Time `json:"dateTo"`
 }
 
-type CreateTimesheetRequest struct {
+type CreateActivityRequest struct {
 	Owner   string `json:"owner"`
+	Family  string `json:"family"`
+	Type    string `json:"type"`
 	DateFrom time.Time `json:"dateFrom"`
 	DateTo time.Time `json:"dateTo"`
 }
 
-type UpdateTimesheetRequest struct {
+type UpdateActivityRequest struct {
 	Id      string `json:"-"`
+	Owner   string `json:"owner"`
+	Family  string `json:"family"`
+	Type    string `json:"type"`
 	DateFrom time.Time `json:"dateFrom"`
 	DateTo time.Time `json:"dateTo"`
 }
 
-type Event struct {
+type ListActivitiesResponse struct {
+	Result []*Activity              `json:"result"`
+}
+
+type ActivityType struct {
 	Id          string    `json:"id"`
-	TimesheetId string    `json:"timesheetId"`
-	Subject     string    `json:"subject"`
-	WeekDay     string    `json:"weekDay"`
-	TimeStart   time.Time `json:"timeStart"`
-	TimeEnd     time.Time `json:"timeEnd"`
+	Family      string    `json:"family"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
 }
 
-type CreateEventRequest struct {
-	TimesheetId string    `json:"timesheetId"`
-	Subject     string    `json:"subject"`
-	WeekDay     string    `json:"weekDay"`
-	TimeStart   time.Time `json:"timeStart"`
-	TimeEnd     time.Time `json:"timeEnd"`
+type CreateActivityTypeRequest struct {
+	Family      string    `json:"family"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
 }
 
-type UpdateEventRequest struct {
-	Id          string    `json:"-"`
-	Subject     string    `json:"subject"`
-	WeekDay     string    `json:"weekDay"`
-	TimeStart   time.Time `json:"timeStart"`
-	TimeEnd     time.Time `json:"timeEnd"`
+type UpdateActivityTypeRequest struct {
+	Id          string    `json:"id"`
+	Family      string    `json:"family"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
 }
 
-type EventSearchResponse struct {
-	Result []*Event              `json:"result"`
+type ListActivityTypesResponse struct {
+	Result []*ActivityType              `json:"result"`
 }

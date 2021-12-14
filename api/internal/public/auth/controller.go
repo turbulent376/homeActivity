@@ -3,9 +3,9 @@ package auth
 import (
 	"net/http"
 
-	"git.jetbrains.space/orbi/fcsd/api/internal/public"
-	kitHttp "git.jetbrains.space/orbi/fcsd/kit/http"
-	pb "git.jetbrains.space/orbi/fcsd/proto/auth"
+	"github.com/turbulent376/homeactivity/api/internal/public"
+	kitHttp "github.com/turbulent376/kit/http"
+	pb "github.com/turbulent376/proto/auth"
 )
 
 type Controller interface {

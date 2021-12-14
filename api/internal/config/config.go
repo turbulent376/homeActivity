@@ -1,12 +1,12 @@
 package config
 
 import (
-	"git.jetbrains.space/orbi/fcsd/api/internal/logger"
-	"git.jetbrains.space/orbi/fcsd/api/internal/meta"
-	kitConfig "git.jetbrains.space/orbi/fcsd/kit/config"
-	"git.jetbrains.space/orbi/fcsd/kit/grpc"
-	kitHttp "git.jetbrains.space/orbi/fcsd/kit/http"
-	"git.jetbrains.space/orbi/fcsd/kit/log"
+	"github.com/turbulent376/homeactivity/api/internal/logger"
+	"github.com/turbulent376/homeactivity/api/internal/meta"
+	kitConfig "github.com/turbulent376/kit/config"
+	"github.com/turbulent376/kit/grpc"
+	kitHttp "github.com/turbulent376/kit/http"
+	"github.com/turbulent376/kit/log"
 	"os"
 	"path/filepath"
 )

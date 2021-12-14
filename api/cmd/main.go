@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"git.jetbrains.space/orbi/fcsd/api"
-	"git.jetbrains.space/orbi/fcsd/api/internal/logger"
-	kitContext "git.jetbrains.space/orbi/fcsd/kit/context"
+	"github.com/turbulent376/homeactivity/api"
+	"github.com/turbulent376/homeactivity/api/internal/logger"
+	kitContext "github.com/turbulent376/kit/context"
 	"os"
 	"os/signal"
 	"syscall"

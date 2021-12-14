@@ -1,63 +1,25 @@
 package public
 
 import (
-	authPb "git.jetbrains.space/orbi/fcsd/proto/auth"
-	billPb "git.jetbrains.space/orbi/fcsd/proto/billing"
-	licPb "git.jetbrains.space/orbi/fcsd/proto/license"
-	locPb "git.jetbrains.space/orbi/fcsd/proto/location"
-	repPb "git.jetbrains.space/orbi/fcsd/proto/report"
-	storePb "git.jetbrains.space/orbi/fcsd/proto/storage"
-	timesPb "git.jetbrains.space/orbi/fcsd/proto/timesheet"
+	authPb "github.com/turbulent376/proto/auth"
+	activPb "github.com/turbulent376/proto/activity"
 
 	"context"
-	"io"
+	//"io"
 )
 
-type BillingRepository interface {
-	MakePayment(ctx context.Context, rq *billPb.MakePaymentRequest) (*billPb.Payment, error)
-	GetProducts(ctx context.Context) (*billPb.GetProductsResponse, error)
-	CreateProduct(ctx context.Context, rq *billPb.CreateProductRequest) (*billPb.Product, error)
-	GetProduct(ctx context.Context, rq *billPb.GetProductRequest) (*billPb.Product, error)
-	UpdateProduct(ctx context.Context, rq *billPb.Product) (*billPb.Product, error)
-	DeleteProduct(ctx context.Context, rq *billPb.DeleteProductRequest) error
-	AppleWebhook(ctx context.Context, rq *billPb.AppleWebhookRequest) error
-}
-
-type LicenseRepository interface {
-	GetUserLicenses(ctx context.Context, rq *licPb.GetUserLicensesRequest) (*licPb.UserLicenses, error)
-	GetLicenses(ctx context.Context) (*licPb.LicenseListResponse, error)
-	GetLicense(ctx context.Context, rq *licPb.LicenseRequest) (*licPb.License, error)
-	CreateLicense(ctx context.Context, rq *licPb.CreateLicenseRequest) (*licPb.License, error)
-	DeleteLicense(ctx context.Context, rq *licPb.LicenseRequest) error
-	UpdateLicense(ctx context.Context, rq *licPb.UpdateLicenseRequest) (*licPb.License, error)
-}
-
-type ReportRepository interface {
-	CreateReport(ctx context.Context, request *repPb.CreateReportRequest) (*repPb.Report, error)
-}
-
-type StorageRepository interface {
-	PutFile(ctx context.Context, fi *storePb.StorePutFileRequest_FileInfo, file io.Reader) (*storePb.StorePutFileResponse, error)
-	GetFile(ctx context.Context, rq *storePb.StoreFileIDRequest) (*storePb.StoreGetFileResponse, error)
-	GetMetadata(ctx context.Context, rq *storePb.StoreFileIDRequest) (*storePb.StoreFileInfo, error)
-	DeleteFile(ctx context.Context, rq *storePb.StoreFileIDRequest) (*storePb.NoResponse, error)
-}
-
-type TimesheetRepository interface {
-	CreateTimesheet(ctx context.Context, rq *timesPb.CreateTimesheetRequest) (*timesPb.Timesheet, error)
-	UpdateTimesheet(ctx context.Context, rq *timesPb.UpdateTimesheetRequest) (*timesPb.Timesheet, error)
-	GetTimesheet(ctx context.Context, rq *timesPb.TimesheetIdRequest) (*timesPb.Timesheet, error)
-	SearchTimesheet(ctx context.Context, rq *timesPb.SearchTimesheetRequest) (*timesPb.Timesheet, error)
-	DeleteTimesheet(ctx context.Context, rq *timesPb.TimesheetIdRequest) error
-	CreateEvent(ctx context.Context, rq *timesPb.CreateEventRequest) (*timesPb.Event, error)
-	UpdateEvent(ctx context.Context, rq *timesPb.UpdateEventRequest) (*timesPb.Event, error)
-	GetEvent(ctx context.Context, rq *timesPb.EventIdRequest) (*timesPb.Event, error)
-	DeleteEvent(ctx context.Context, rq *timesPb.EventIdRequest) error
-	SearchEvents(ctx context.Context, rq *timesPb.EventIdRequest) (*timesPb.SearchResponse, error)
-}
-
-type LocationRepository interface {
-	GetAllLocations(ctx context.Context, request *locPb.PagingRequest) (*locPb.LocationsResponse, error)
+type ActivityRepository interface {
+	CreateActivity(ctx context.Context, rq *activPb.CreateActivityRequest) (*activPb.Activity, error)
+	UpdateActivity(ctx context.Context, rq *activPb.UpdateActivityRequest) (*activPb.Activity, error)
+	GetActivity(ctx context.Context, rq *activPb.ActivityIdRequest) (*activPb.Activity, error)
+	ListActivities(ctx context.Context, rq *activPb.ListActivitiesRequest) (*activPb.ListActivitiesResponse, error)
+	ListActivitiesByFamily(ctx context.Context, rq *activPb.ListActivitiesByFamilyRequest) (*activPb.ListActivitiesResponse, error)
+	DeleteActivity(ctx context.Context, rq *activPb.ActivityIdRequest) error
+	CreateActivityType(ctx context.Context, rq *activPb.CreateActivityTypeRequest) (*activPb.ActivityType, error)
+	UpdateActivityType(ctx context.Context, rq *activPb.UpdateActivityTypeRequest) (*activPb.ActivityType, error)
+	GetActivityType(ctx context.Context, rq *activPb.ActivityTypeIdRequest) (*activPb.ActivityType, error)
+	DeleteActivityType(ctx context.Context, rq *activPb.ActivityTypeIdRequest) error
+	ListActivityTypes(ctx context.Context, rq *activPb.ListActivityTypesRequest) (*activPb.ListActivityTypesResponse, error)
 }
 
 type AuthRepository interface {

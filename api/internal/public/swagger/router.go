@@ -1,8 +1,8 @@
 package swagger
 
 import (
-	_ "git.jetbrains.space/orbi/fcsd/api/docs"
-	kitHttp "git.jetbrains.space/orbi/fcsd/kit/http"
+	_ "github.com/turbulent376/homeactivity/api/docs"
+	kitHttp "github.com/turbulent376/kit/http"
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 )

@@ -1,69 +1,80 @@
-package timesheet
+package activity
 
 import (
-	pb "git.jetbrains.space/orbi/fcsd/proto/timesheet"
+	pb "github.com/turbulent376/proto/activity"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func (c *ctrlImpl) toCreateTimesheetPb(rq *CreateTimesheetRequest) *pb.CreateTimesheetRequest {
-	return &pb.CreateTimesheetRequest{
+func (c *ctrlImpl) toCreateActivityPb(rq *CreateActivityRequest) *pb.CreateActivityRequest {
+	return &pb.CreateActivityRequest{
 		Owner:    rq.Owner,
+		Family:   rq.Family,
+		Type:     rq.Type,
 		DateFrom: timestamppb.New(rq.DateFrom),
 		DateTo:   timestamppb.New(rq.DateTo),
 	}
 }
 
-func (c *ctrlImpl) toTimesheetApi(rq *pb.Timesheet) *Timesheet {
-	return &Timesheet{
+func (c *ctrlImpl) toActivityApi(rq *pb.Activity) *Activity {
+	return &Activity{
 		Id:       rq.Id,
 		Owner:    rq.Owner,
+		Family:   rq.Family,
+		Type:     rq.Type,
 		DateFrom: rq.DateFrom.AsTime(),
 		DateTo:   rq.DateTo.AsTime(),
 	}
 }
 
-func (c *ctrlImpl) toUpdateTimesheetPb(rq *UpdateTimesheetRequest) *pb.UpdateTimesheetRequest {
-	return &pb.UpdateTimesheetRequest{
+func (c *ctrlImpl) toActivitiesApi(rq *pb.ListActivitiesResponse) ListActivitiesResponse {
+	var res []*Activity
+	for _, result := range rq.GetActivities() {
+		res = append(res, c.toActivityApi(result))
+	}
+	return ListActivitiesResponse{Result: res}
+}
+
+func (c *ctrlImpl) toUpdateActivityPb(rq *UpdateActivityRequest) *pb.UpdateActivityRequest {
+	return &pb.UpdateActivityRequest{
 		Id:      rq.Id,
+		Owner:    rq.Owner,
+		Family:   rq.Family,
+		Type:     rq.Type,
 		DateFrom: timestamppb.New(rq.DateFrom),
 		DateTo: timestamppb.New(rq.DateTo),
 	}
 }
 
-func (c *ctrlImpl) toCreateEventPb(rq *CreateEventRequest) *pb.CreateEventRequest {
-	return &pb.CreateEventRequest{
-		TimesheetId:  rq.TimesheetId,
-		Subject:      rq.Subject,
-		WeekDay:      rq.WeekDay,
-		TimeStart:    timestamppb.New(rq.TimeStart),
-		TimeEnd:      timestamppb.New(rq.TimeEnd),
+func (c *ctrlImpl) toCreateActivityTypePb(rq *CreateActivityTypeRequest) *pb.CreateActivityTypeRequest {
+	return &pb.CreateActivityTypeRequest{
+		Family:       rq.Family,
+		Name:         rq.Name,
+		Description:  rq.Description,
 	}
 }
 
-func (c *ctrlImpl) toEventApi(rq *pb.Event) *Event {
-	return &Event{
+func (c *ctrlImpl) toActivityTypeApi(rq *pb.ActivityType) *ActivityType {
+	return &ActivityType{
 		Id:           rq.Id,
-		TimesheetId:  rq.TimesheetId,
-		Subject:      rq.Subject,
-		TimeStart:    rq.TimeStart.AsTime(),
-		TimeEnd:      rq.TimeEnd.AsTime(),
+		Family:       rq.Family,
+		Name:         rq.Name,
+		Description:  rq.Description,
 	}
 }
 
-func (c *ctrlImpl) toUpdateEventPb(rq *UpdateEventRequest) *pb.UpdateEventRequest {
-	return &pb.UpdateEventRequest{
+func (c *ctrlImpl) toUpdateActivityTypePb(rq *UpdateActivityTypeRequest) *pb.UpdateActivityTypeRequest {
+	return &pb.UpdateActivityTypeRequest{
 		Id:          rq.Id,
-		Subject:      rq.Subject,
-		WeekDay:      rq.WeekDay,
-		TimeStart:    timestamppb.New(rq.TimeStart),
-		TimeEnd:      timestamppb.New(rq.TimeEnd),
+		Family:       rq.Family,
+		Name:         rq.Name,
+		Description:  rq.Description,
 	}
 }
 
-func (c *ctrlImpl) toEventsApi(rq *pb.SearchResponse) EventSearchResponse {
-	var res []*Event
-	for _, result := range rq.GetEvents() {
-		res = append(res, c.toEventApi(result))
+func (c *ctrlImpl) toActivityTypesApi(rq *pb.ListActivityTypesResponse) ListActivityTypesResponse {
+	var res []*ActivityType
+	for _, result := range rq.GetActyvityTypes() {
+		res = append(res, c.toActivityTypeApi(result))
 	}
-	return EventSearchResponse{Result: res}
+	return ListActivityTypesResponse{Result: res}
 }

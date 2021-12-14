@@ -1,49 +1,49 @@
-package timesheet
+package activity
 
 import (
-	"git.jetbrains.space/orbi/fcsd/api/internal/public"
-	kitHttp "git.jetbrains.space/orbi/fcsd/kit/http"
-	pb "git.jetbrains.space/orbi/fcsd/proto/timesheet"
-	"google.golang.org/protobuf/types/known/timestamppb"
+	"github.com/turbulent376/homeactivity/api/internal/public"
+	kitHttp "github.com/turbulent376/kit/http"
+	pb "github.com/turbulent376/proto/activity"
 	"net/http"
 )
 
 type Controller interface {
-	CreateTimesheet(w http.ResponseWriter, r *http.Request)
-	UpdateTimesheet(w http.ResponseWriter, r *http.Request)
-	GetTimesheet(w http.ResponseWriter, r *http.Request)
-	SearchTimesheet(w http.ResponseWriter, r *http.Request)
-	DeleteTimesheet(w http.ResponseWriter, r *http.Request)
-	CreateEvent(w http.ResponseWriter, r *http.Request)
-	UpdateEvent(w http.ResponseWriter, r *http.Request)
-	GetEvent(w http.ResponseWriter, r *http.Request)
-	DeleteEvent(w http.ResponseWriter, r *http.Request)
-	SearchEvents(w http.ResponseWriter, r *http.Request)
+	CreateActivity(w http.ResponseWriter, r *http.Request)
+	UpdateActivity(w http.ResponseWriter, r *http.Request)
+	GetActivity(w http.ResponseWriter, r *http.Request)
+	ListActivities(w http.ResponseWriter, r *http.Request)
+	ListActivitiesByFamily(w http.ResponseWriter, r *http.Request)
+	DeleteActivity(w http.ResponseWriter, r *http.Request)
+	CreateActivityType(w http.ResponseWriter, r *http.Request)
+	UpdateActivityType(w http.ResponseWriter, r *http.Request)
+	GetActivityType(w http.ResponseWriter, r *http.Request)
+	DeleteActivityType(w http.ResponseWriter, r *http.Request)
+	ListActivityTypes(w http.ResponseWriter, r *http.Request)
 }
 
 type ctrlImpl struct {
 	kitHttp.BaseController
-	timesheetRepo public.TimesheetRepository
+	activityRepo public.ActivityRepository
 }
 
-func NewController(timesheetRepo public.TimesheetRepository) Controller {
+func NewController(ar public.ActivityRepository) Controller {
 	return &ctrlImpl{
-		timesheetRepo: timesheetRepo,
+		activityRepo: ar,
 	}
 }
 
-// CreateTimesheet godoc
-// @Summary create timetable
+// CreateActivity godoc
+// @Summary create activity
 // @Accept json
-// @Router /timesheet/timetable [POST]
+// @Router /activity/activity [POST]
 // @Param json body CreateTimesheetRequest true "request"
 // @Produce json
 // @Success 200 {object} Timesheet
 // @Failure 500 {object} kitHttp.Error
 // @tags timesheet
-func (c *ctrlImpl) CreateTimesheet(w http.ResponseWriter, r *http.Request) {
+func (c *ctrlImpl) CreateActivity(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	var request *CreateTimesheetRequest
+	var request *CreateActivityRequest
 
 	err := c.DecodeRequest(r, ctx, &request)
 
@@ -51,27 +51,27 @@ func (c *ctrlImpl) CreateTimesheet(w http.ResponseWriter, r *http.Request) {
 		c.RespondError(w, err)
 		return
 	}
-	timesheet, err := c.timesheetRepo.CreateTimesheet(ctx, c.toCreateTimesheetPb(request))
+	activity, err := c.activityRepo.CreateActivity(ctx, c.toCreateActivityPb(request))
 	if err != nil {
 		c.RespondError(w, err)
 		return
 	}
-	c.RespondOK(w, c.toTimesheetApi(timesheet))
+	c.RespondOK(w, c.toActivityApi(activity))
 }
 
-// UpdateTimesheet godoc
-// @Summary update timetable
+// UpdateActivity godoc
+// @Summary update activity
 // @Accept json
-// @Router /timesheet/timetable/{id} [PUT]
-// @Param json body UpdateTimesheetRequest true "request"
-// @Param id path string true "id of timesheet"
+// @Router /activity/activity/{id} [PUT]
+// @Param json body UpdateActivityRequest true "request"
+// @Param id path string true "id of activity"
 // @Produce json
-// @Success 200 {object} Timesheet
+// @Success 200 {object} Activity
 // @Failure 500 {object} kitHttp.Error
-// @tags timesheet
-func (c *ctrlImpl) UpdateTimesheet(w http.ResponseWriter, r *http.Request) {
+// @tags activity
+func (c *ctrlImpl) UpdateActivity(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	var request *UpdateTimesheetRequest
+	var request *UpdateActivityRequest
 
 	id, err := c.Var(r, ctx, "id", false)
 
@@ -89,23 +89,23 @@ func (c *ctrlImpl) UpdateTimesheet(w http.ResponseWriter, r *http.Request) {
 
 	request.Id = id
 
-	timesheet, err := c.timesheetRepo.UpdateTimesheet(ctx, c.toUpdateTimesheetPb(request))
+	activity, err := c.activityRepo.UpdateActivity(ctx, c.toUpdateActivityPb(request))
 	if err != nil {
 		c.RespondError(w, err)
 		return
 	}
-	c.RespondOK(w, c.toTimesheetApi(timesheet))
+	c.RespondOK(w, c.toActivityApi(activity))
 }
 
-// GetTimesheet godoc
-// @Summary getting timetable
-// @Router /timesheet/timetable/{id} [GET]
+// GetActivity godoc
+// @Summary getting activity
+// @Router /activity/activity/{id} [GET]
 // @Param id path string true "id"
 // @Produce json
-// @Success 200 {object} Timesheet
+// @Success 200 {object} Activity
 // @Failure 500 {object} kitHttp.Error
-// @tags timesheet
-func (c *ctrlImpl) GetTimesheet(w http.ResponseWriter, r *http.Request) {
+// @tags activity
+func (c *ctrlImpl) GetActivity(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	id, err := c.Var(r, ctx, "id", false)
@@ -115,25 +115,23 @@ func (c *ctrlImpl) GetTimesheet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	timesheet, err := c.timesheetRepo.GetTimesheet(ctx, &pb.TimesheetIdRequest{Id: id})
+	activity, err := c.activityRepo.GetActivity(ctx, &pb.ActivityIdRequest{Id: id})
 	if err != nil {
 		c.RespondError(w, err)
 		return
 	}
-	c.RespondOK(w, c.toTimesheetApi(timesheet))
+	c.RespondOK(w, c.toActivityApi(activity))
 }
 
-// SearchTimesheet godoc
-// @Summary getting timetable
-// @Router /timesheet/timetable/{owner} [GET]
+// ListActivities godoc
+// @Summary getting activities by owner
+// @Router /activity/list/{owner} [GET]
 // @Param owner path string true "owner"
-// @Param dateFromSearch formData string false "date from (type is time)"
-// @Param dateToSearch formData string false "date to (type is time)"
 // @Produce json
-// @Success 200 {object} Timesheet
+// @Success 200 {object} ListActivitiesResponse
 // @Failure 500 {object} kitHttp.Error
-// @tags timesheet
-func (c *ctrlImpl) SearchTimesheet(w http.ResponseWriter, r *http.Request) {
+// @tags activity
+func (c *ctrlImpl) ListActivities(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	owner, err := c.Var(r, ctx, "owner", false)
@@ -143,40 +141,52 @@ func (c *ctrlImpl) SearchTimesheet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dateFromSearch, err := c.FormValTime(r, ctx, "dateFromSearch", true)
-
-	if err != nil {
-		c.RespondError(w, err)
-		return
-	}
-
-	dateToSearch, err := c.FormValTime(r, ctx, "dateToSearch", true)
-
-	if err != nil {
-		c.RespondError(w, err)
-		return
-	}
-
-	timesheet, err := c.timesheetRepo.SearchTimesheet(ctx, &pb.SearchTimesheetRequest{
+	resp, err := c.activityRepo.ListActivities(ctx, &pb.ListActivitiesRequest{
 		Owner:          owner,
-		DateFromSearch: timestamppb.New(*dateFromSearch),
-		DateToSearch:   timestamppb.New(*dateToSearch),
 	})
 	if err != nil {
 		c.RespondError(w, err)
 		return
 	}
-	c.RespondOK(w, c.toTimesheetApi(timesheet))
+	c.RespondOK(w, c.toActivitiesApi(resp))
 }
 
-// DeleteTimesheet godoc
-// @Summary delete timetable
-// @Router /timesheet/timetable/{id} [DELETE]
-// @Param id path string true "id of timesheet"
+// ListActivitiesByFamily godoc
+// @Summary getting activities by family
+// @Router /activity/listfamily/{family} [GET]
+// @Param owner path string true "family"
+// @Produce json
+// @Success 200 {object} ListActivitiesResponse
+// @Failure 500 {object} kitHttp.Error
+// @tags activity
+func (c *ctrlImpl) ListActivitiesByFamily(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	family, err := c.Var(r, ctx, "family", false)
+
+	if err != nil {
+		c.RespondError(w, err)
+		return
+	}
+
+	resp, err := c.activityRepo.ListActivitiesByFamily(ctx, &pb.ListActivitiesByFamilyRequest{
+		Family:          family,
+	})
+	if err != nil {
+		c.RespondError(w, err)
+		return
+	}
+	c.RespondOK(w, c.toActivitiesApi(resp))
+}
+
+// DeleteActivity godoc
+// @Summary delete activity
+// @Router /activity/activity/{id} [DELETE]
+// @Param id path string true "id of activity"
 // @Success 200
 // @Failure 500 {object} kitHttp.Error
-// @tags timesheet
-func (c *ctrlImpl) DeleteTimesheet(w http.ResponseWriter, r *http.Request) {
+// @tags activity
+func (c *ctrlImpl) DeleteActivity(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	id, err := c.Var(r, ctx, "id", false)
@@ -186,7 +196,7 @@ func (c *ctrlImpl) DeleteTimesheet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = c.timesheetRepo.DeleteTimesheet(ctx, &pb.TimesheetIdRequest{Id: id})
+	err = c.activityRepo.DeleteActivity(ctx, &pb.ActivityIdRequest{Id: id})
 	if err != nil {
 		c.RespondError(w, err)
 		return
@@ -194,18 +204,18 @@ func (c *ctrlImpl) DeleteTimesheet(w http.ResponseWriter, r *http.Request) {
 	c.RespondOK(w, nil)
 }
 
-// CreateEvent godoc
-// @Summary create event
+// CreateActivityType godoc
+// @Summary create activityType
 // @Accept json
-// @Router /timesheet/event [POST]
-// @Param json body CreateEventRequest true "request"
+// @Router /activity/activitytype [POST]
+// @Param json body CreateActivityTypeRequest true "request"
 // @Produce json
-// @Success 200 {object} Event
+// @Success 200 {object} ActivityType
 // @Failure 500 {object} kitHttp.Error
-// @tags event
-func (c *ctrlImpl) CreateEvent(w http.ResponseWriter, r *http.Request) {
+// @tags activitytype
+func (c *ctrlImpl) CreateActivityType(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	var request *CreateEventRequest
+	var request *CreateActivityTypeRequest
 
 	err := c.DecodeRequest(r, ctx, &request)
 
@@ -213,27 +223,27 @@ func (c *ctrlImpl) CreateEvent(w http.ResponseWriter, r *http.Request) {
 		c.RespondError(w, err)
 		return
 	}
-	event, err := c.timesheetRepo.CreateEvent(ctx, c.toCreateEventPb(request))
+	at, err := c.activityRepo.CreateActivityType(ctx, c.toCreateActivityTypePb(request))
 	if err != nil {
 		c.RespondError(w, err)
 		return
 	}
-	c.RespondOK(w, c.toEventApi(event))
+	c.RespondOK(w, c.toActivityTypeApi(at))
 }
 
-// UpdateEvent godoc
-// @Summary update event
+// UpdateActivityType godoc
+// @Summary update activityType
 // @Accept json
-// @Router /timesheet/event/{id} [PUT]
-// @Param json body UpdateEventRequest true "request"
-// @Param id path string true "id of event"
+// @Router /activity/activitytype/{id} [PUT]
+// @Param json body UpdateActivityTypeRequest true "request"
+// @Param id path string true "id of activityType"
 // @Produce json
-// @Success 200 {object} Event
+// @Success 200 {object} ActivityType
 // @Failure 500 {object} kitHttp.Error
-// @tags event
-func (c *ctrlImpl) UpdateEvent(w http.ResponseWriter, r *http.Request) {
+// @tags activitytype
+func (c *ctrlImpl) UpdateActivityType(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	var request *UpdateEventRequest
+	var request *UpdateActivityTypeRequest
 
 	id, err := c.Var(r, ctx, "id", false)
 
@@ -250,23 +260,23 @@ func (c *ctrlImpl) UpdateEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	request.Id = id
-	event, err := c.timesheetRepo.UpdateEvent(ctx, c.toUpdateEventPb(request))
+	at, err := c.activityRepo.UpdateActivityType(ctx, c.toUpdateActivityTypePb(request))
 	if err != nil {
 		c.RespondError(w, err)
 		return
 	}
-	c.RespondOK(w, c.toEventApi(event))
+	c.RespondOK(w, c.toActivityTypeApi(at))
 }
 
-// GetEvent godoc
-// @Summary getting event
-// @Router /timesheet/event/{id} [GET]
-// @Param id path string true "id of event"
+// GetActivityType godoc
+// @Summary getting activityType
+// @Router /activity/activitytype/{id} [GET]
+// @Param id path string true "id of activityType"
 // @Produce json
-// @Success 200 {object} Event
+// @Success 200 {object} ActivityType
 // @Failure 500 {object} kitHttp.Error
-// @tags event
-func (c *ctrlImpl) GetEvent(w http.ResponseWriter, r *http.Request) {
+// @tags activitytype
+func (c *ctrlImpl) GetActivityType(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	id, err := c.Var(r, ctx, "id", false)
@@ -276,24 +286,24 @@ func (c *ctrlImpl) GetEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	event, err := c.timesheetRepo.GetEvent(ctx, &pb.EventIdRequest{
+	at, err := c.activityRepo.GetActivityType(ctx, &pb.ActivityTypeIdRequest{
 		Id: id,
 	})
 	if err != nil {
 		c.RespondError(w, err)
 		return
 	}
-	c.RespondOK(w, c.toEventApi(event))
+	c.RespondOK(w, c.toActivityTypeApi(at))
 }
 
-// DeleteEvent godoc
-// @Summary delete event
-// @Router /timesheet/event/{id} [DELETE]
-// @Param id path string true "id of event"
+// DeleteActivityType godoc
+// @Summary delete activityType
+// @Router /activity/activitytype/{id} [DELETE]
+// @Param id path string true "id of activityType"
 // @Success 200
 // @Failure 500 {object} kitHttp.Error
-// @tags event
-func (c *ctrlImpl) DeleteEvent(w http.ResponseWriter, r *http.Request) {
+// @tags activitytype
+func (c *ctrlImpl) DeleteActivityType(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	id, err := c.Var(r, ctx, "id", false)
@@ -303,7 +313,7 @@ func (c *ctrlImpl) DeleteEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = c.timesheetRepo.DeleteEvent(ctx, &pb.EventIdRequest{Id: id})
+	err = c.activityRepo.DeleteActivityType(ctx, &pb.ActivityTypeIdRequest{Id: id})
 	if err != nil {
 		c.RespondError(w, err)
 		return
@@ -311,28 +321,28 @@ func (c *ctrlImpl) DeleteEvent(w http.ResponseWriter, r *http.Request) {
 	c.RespondOK(w, nil)
 }
 
-// SearchEvents godoc
-// @Summary search events
-// @Router /timesheet/event/{timesheetId} [GET]
-// @Param timesheetId path string true "id of timesheet"
+// ListActivityTypes godoc
+// @Summary list activityTypes by family
+// @Router /activity/listactivitytypes/{family} [GET]
+// @Param family path string true "id of family"
 // @Produce json
-// @Success 200 {object} EventSearchResponse
+// @Success 200 {object} ListActivityTypesResponse
 // @Failure 500 {object} kitHttp.Error
-// @tags event
-func (c *ctrlImpl) SearchEvents(w http.ResponseWriter, r *http.Request) {
+// @tags activitytype
+func (c *ctrlImpl) ListActivityTypes(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	timesheetId, err := c.Var(r, ctx, "timesheetId", false)
+	family, err := c.Var(r, ctx, "family", false)
 
 	if err != nil {
 		c.RespondError(w, err)
 		return
 	}
 
-	event, err := c.timesheetRepo.SearchEvents(ctx, &pb.EventIdRequest{Id: timesheetId})
+	resp, err := c.activityRepo.ListActivityTypes(ctx, &pb.ListActivityTypesRequest{Family: family})
 	if err != nil {
 		c.RespondError(w, err)
 		return
 	}
-	c.RespondOK(w, c.toEventsApi(event))
+	c.RespondOK(w, c.toActivityTypesApi(resp))
 }

@@ -1,24 +1,24 @@
-package timesheet
+package activity
 
 import (
 	"context"
-	"git.jetbrains.space/orbi/fcsd/api/internal/config"
-	"git.jetbrains.space/orbi/fcsd/api/internal/public"
-	kitGrpc "git.jetbrains.space/orbi/fcsd/kit/grpc"
-	pb "git.jetbrains.space/orbi/fcsd/proto/timesheet"
+	"github.com/turbulent376/homeactivity/api/internal/config"
+	"github.com/turbulent376/homeactivity/api/internal/public"
+	kitGrpc "github.com/turbulent376/kit/grpc"
+	pb "github.com/turbulent376/proto/activity"
 	"time"
 )
 
 const ReadyTimeout = time.Second * 3
 
 type Adapter interface {
-	public.TimesheetRepository
+	public.ActivityRepository
 	Init(cfg *config.Adapter) error
 	Close()
 }
 
 type adapterImpl struct {
-	pb.TimesheetServiceClient
+	pb.ActivityServiceClient
 	client *kitGrpc.Client
 }
 
@@ -35,17 +35,13 @@ func (a *adapterImpl) Init(cfg *config.Adapter) error {
 
 	a.client = cl
 
-	if !a.client.AwaitReadiness(ReadyTimeout) {
-		return kitGrpc.ErrGrpcSrvNotReady("billing")
-	}
-
-	a.TimesheetServiceClient = pb.NewTimesheetServiceClient(cl.Conn)
+	a.ActivityServiceClient = pb.NewActivityServiceClient(cl.Conn)
 
 	return nil
 }
 
-func (a *adapterImpl) CreateTimesheet(ctx context.Context, rq *pb.CreateTimesheetRequest) (*pb.Timesheet, error) {
-	res, err := a.TimesheetServiceClient.Create(ctx, rq)
+func (a *adapterImpl) CreateActivity(ctx context.Context, rq *pb.CreateActivityRequest) (*pb.Activity, error) {
+	res, err := a.ActivityServiceClient.Create(ctx, rq)
 
 	if err != nil {
 		return nil, err
@@ -54,8 +50,8 @@ func (a *adapterImpl) CreateTimesheet(ctx context.Context, rq *pb.CreateTimeshee
 	return res, nil
 }
 
-func (a *adapterImpl) UpdateTimesheet(ctx context.Context, rq *pb.UpdateTimesheetRequest) (*pb.Timesheet, error) {
-	res, err := a.TimesheetServiceClient.Update(ctx, rq)
+func (a *adapterImpl) UpdateActivity(ctx context.Context, rq *pb.UpdateActivityRequest) (*pb.Activity, error) {
+	res, err := a.ActivityServiceClient.Update(ctx, rq)
 
 	if err != nil {
 		return nil, err
@@ -64,8 +60,8 @@ func (a *adapterImpl) UpdateTimesheet(ctx context.Context, rq *pb.UpdateTimeshee
 	return res, nil
 }
 
-func (a *adapterImpl) GetTimesheet(ctx context.Context, rq *pb.TimesheetIdRequest) (*pb.Timesheet, error) {
-	res, err := a.TimesheetServiceClient.Get(ctx, rq)
+func (a *adapterImpl) GetActivity(ctx context.Context, rq *pb.ActivityIdRequest) (*pb.Activity, error) {
+	res, err := a.ActivityServiceClient.Get(ctx, rq)
 
 	if err != nil {
 		return nil, err
@@ -74,8 +70,8 @@ func (a *adapterImpl) GetTimesheet(ctx context.Context, rq *pb.TimesheetIdReques
 	return res, nil
 }
 
-func (a *adapterImpl) SearchTimesheet(ctx context.Context, rq *pb.SearchTimesheetRequest) (*pb.Timesheet, error) {
-	res, err := a.TimesheetServiceClient.Search(ctx, rq)
+func (a *adapterImpl) ListActivities(ctx context.Context, rq *pb.ListActivitiesRequest) (*pb.ListActivitiesResponse, error) {
+	res, err := a.ActivityServiceClient.ListActivities(ctx, rq)
 
 	if err != nil {
 		return nil, err
@@ -84,8 +80,18 @@ func (a *adapterImpl) SearchTimesheet(ctx context.Context, rq *pb.SearchTimeshee
 	return res, nil
 }
 
-func (a *adapterImpl) DeleteTimesheet(ctx context.Context, rq *pb.TimesheetIdRequest) error {
-	_, err := a.TimesheetServiceClient.Delete(ctx, rq)
+func (a *adapterImpl) ListActivitiesByFamily(ctx context.Context, rq *pb.ListActivitiesByFamilyRequest) (*pb.ListActivitiesResponse, error) {
+	res, err := a.ActivityServiceClient.ListActivitiesByFamily(ctx, rq)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (a *adapterImpl) DeleteActivity(ctx context.Context, rq *pb.ActivityIdRequest) error {
+	_, err := a.ActivityServiceClient.Delete(ctx, rq)
 
 	if err != nil {
 		return err
@@ -94,8 +100,8 @@ func (a *adapterImpl) DeleteTimesheet(ctx context.Context, rq *pb.TimesheetIdReq
 	return nil
 }
 
-func (a *adapterImpl) CreateEvent(ctx context.Context, rq *pb.CreateEventRequest) (*pb.Event, error) {
-	res, err := a.TimesheetServiceClient.CreateEvent(ctx, rq)
+func (a *adapterImpl) CreateActivityType(ctx context.Context, rq *pb.CreateActivityTypeRequest) (*pb.ActivityType, error) {
+	res, err := a.ActivityServiceClient.CreateActivityType(ctx, rq)
 
 	if err != nil {
 		return nil, err
@@ -104,8 +110,8 @@ func (a *adapterImpl) CreateEvent(ctx context.Context, rq *pb.CreateEventRequest
 	return res, nil
 }
 
-func (a *adapterImpl) UpdateEvent(ctx context.Context, rq *pb.UpdateEventRequest) (*pb.Event, error) {
-	res, err := a.TimesheetServiceClient.UpdateEvent(ctx, rq)
+func (a *adapterImpl) UpdateActivityType(ctx context.Context, rq *pb.UpdateActivityTypeRequest) (*pb.ActivityType, error) {
+	res, err := a.ActivityServiceClient.UpdateActivityType(ctx, rq)
 
 	if err != nil {
 		return nil, err
@@ -113,8 +119,8 @@ func (a *adapterImpl) UpdateEvent(ctx context.Context, rq *pb.UpdateEventRequest
 
 	return res, nil
 }
-func (a *adapterImpl) GetEvent(ctx context.Context, rq *pb.EventIdRequest) (*pb.Event, error) {
-	res, err := a.TimesheetServiceClient.GetEvent(ctx, rq)
+func (a *adapterImpl) GetActivityType(ctx context.Context, rq *pb.ActivityTypeIdRequest) (*pb.ActivityType, error) {
+	res, err := a.ActivityServiceClient.GetActivityType(ctx, rq)
 
 	if err != nil {
 		return nil, err
@@ -123,8 +129,8 @@ func (a *adapterImpl) GetEvent(ctx context.Context, rq *pb.EventIdRequest) (*pb.
 	return res, nil
 }
 
-func (a *adapterImpl) DeleteEvent(ctx context.Context, rq *pb.EventIdRequest) error {
-	_, err := a.TimesheetServiceClient.DeleteEvent(ctx, rq)
+func (a *adapterImpl) DeleteActivityType(ctx context.Context, rq *pb.ActivityTypeIdRequest) error {
+	_, err := a.ActivityServiceClient.DeleteActivityType(ctx, rq)
 
 	if err != nil {
 		return err
@@ -133,8 +139,8 @@ func (a *adapterImpl) DeleteEvent(ctx context.Context, rq *pb.EventIdRequest) er
 	return nil
 }
 
-func (a *adapterImpl) SearchEvents(ctx context.Context, rq *pb.EventIdRequest) (*pb.SearchResponse, error) {
-	res, err := a.TimesheetServiceClient.SearchEvents(ctx, rq)
+func (a *adapterImpl) ListActivityTypes(ctx context.Context, rq *pb.ListActivityTypesRequest) (*pb.ListActivityTypesResponse, error) {
+	res, err := a.ActivityServiceClient.ListActivityTypes(ctx, rq)
 
 	if err != nil {
 		return nil, err

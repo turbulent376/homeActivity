@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
-	"git.jetbrains.space/orbi/fcsd/api/internal/config"
-	"git.jetbrains.space/orbi/fcsd/api/internal/public"
-	kitGrpc "git.jetbrains.space/orbi/fcsd/kit/grpc"
-	pb "git.jetbrains.space/orbi/fcsd/proto/auth"
+	"github.com/turbulent376/homeactivity/api/internal/config"
+	"github.com/turbulent376/homeactivity/api/internal/public"
+	kitGrpc "github.com/turbulent376/kit/grpc"
+	pb "github.com/turbulent376/proto/auth"
 )
 
 const ReadyTimeout = time.Second * 3

@@ -1,7 +1,7 @@
 package auth
 
 import (
-	kitHttp "git.jetbrains.space/orbi/fcsd/kit/http"
+	kitHttp "github.com/turbulent376/kit/http"
 	"github.com/gorilla/mux"
 )
 

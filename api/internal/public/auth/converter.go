@@ -1,6 +1,6 @@
 package auth
 
-import pb "git.jetbrains.space/orbi/fcsd/proto/auth"
+import pb "github.com/turbulent376/proto/auth"
 
 func (c *ctrlImpl) toAuthRequestPb(rq *AuthRequest) *pb.AuthRequest {
 	return &pb.AuthRequest{
